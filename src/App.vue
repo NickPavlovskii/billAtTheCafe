@@ -1,9 +1,15 @@
-<template>
-    <div>
+<template >
+    <div class="cont">
       <div v-if="currentScreen === 'add-persons'" class="add-person">
-        <add-persons :people="people" @add-people="addPeople" />
-        <button @click="currentScreen = 'add-positions'">Далее</button>
-      </div>
+        <div class="add-person-content">
+        <add-persons
+          :people="people"
+          @add-people="addPeople"
+          @delete-person="deletePerson"
+        />
+
+        <button @click="currentScreen = 'add-positions'" class="next-button">Далее</button>
+      </div> </div>
       <div v-else-if="currentScreen === 'add-positions'">
         <add-positions :people="people" @add-position="addPosition" />
         <button @click="currentScreen = 'choose-eaten'">Далее</button>
@@ -48,6 +54,12 @@
       };
     },
     methods: {
+      deletePerson(person) {
+    const index = this.people.findIndex(p => p.id === person.id);
+    if (index !== -1) {
+      this.people.splice(index, 1);
+    }
+  },
       addPeople(newPeople) {
         this.people = newPeople;
       },
@@ -74,13 +86,49 @@
   </script>
 
   <style>
-  .add-person {
-  margin: 20px auto;
-  padding: 20px;
+ .cont {
+  background-color: #111520;
+  background-image: url(./img.png); /* Путь к вашей картинке */
+  background-repeat: no-repeat;
+  background-position: right;
+  width: 100%;
+  height: 1000px;
+}
+ 
+
+.next-button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.next-button:hover {
+  background-color: #45a049;
+}
+
+.next-button:focus {
+  outline: none;
+}
+
+.add-person {
+  background-color: white;
+  margin: auto;
+  
+  padding: 30px;
   border: 1px solid #ccc;
   max-width: 400px;
   text-align: center;
+  
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Горизонтальное смещение, вертикальное смещение, размытие, цвет тени */
 }
+
 
 .add-person h2 {
   font-size: 24px;
@@ -100,23 +148,8 @@
   margin-bottom: 10px;
 }
 
-.add-person input[type="text"] {
-  padding: 8px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  font-size: 16px;
-  width: 100%;
-}
+.add-person-content{
 
-.add-person button[type="submit"] {
-  padding: 8px 20px;
-  background-color: #4CAF50;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-  margin-top: 10px;
 }
 
 .add-person ul {

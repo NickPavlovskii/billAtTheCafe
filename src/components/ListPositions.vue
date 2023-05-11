@@ -1,58 +1,52 @@
 <template>
-    <div>
-      <h2>Результаты</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Персона</th>
-            <th>Позиция</th>
-            <th>Цена</th>
-            
-            <th>Стоимость</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(person, index) in people" :key="index">
-            <td>{{ person.name }}</td>
-            <td>
-              <ul>
-                <li v-for="position in positions" :key="position.id">
-                  {{ position.name }}
-                </li>
-              </ul>
-            </td>
-            <td>
-              <ul>
-                <li v-for="position in positions" :key="position.id">
-                  {{ position.price }}р
-                </li>
-              </ul>
-            </td>
-           
-            <td>
-              <ul>
-                <li v-for="position in positions" :key="position.id">
-                  {{ position.price / position.peopleEaten.length }}р
-                </li>
-              </ul>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    props: {
-      positions: {
-        type: Array,
-        required: true,
-      },
-      people: {
-        type: Array,
-        required: true,
-      },
+  <div>
+    <!-- Заголовок -->
+    <h2>Результаты</h2>
+
+    <!-- Таблица с результатами -->
+    <table>
+      <thead>
+        <tr>
+          <th>Персона</th>
+          <th>Сумма потраченных денег</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Перебор персон -->
+        <tr v-for="(person, index) in people" :key="index">
+          <td>{{ person.name }}</td>
+          <td>{{ calculateTotalCost(person) }}р</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    // Массив позиций
+    positions: {
+      type: Array,
+      required: true,
     },
-  };
-  </script>
+    // Массив персон
+    people: {
+      type: Array,
+      required: true,
+    },
+  },
+  methods: {
+    calculateTotalCost(person) {
+      let totalCost = 0;
+      for (let position of this.positions) {
+        if (position.peopleEaten.includes(person)) {
+          totalCost += position.price / position.peopleEaten.length;
+        }
+      }
+      return totalCost;
+    },
+  },
+};
+</script>
+

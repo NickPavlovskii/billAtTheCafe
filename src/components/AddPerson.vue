@@ -3,7 +3,8 @@
     <h2>Добавить человека</h2>
     <form @submit.prevent="addPerson">
       <label>
-        // используем библиотеку  primevue
+         <!-- используем библиотеку  primevue -->
+      
         <div class="p-inputgroup flex-">
           <span class="p-inputgroup-addon">
             <i class="pi pi-user"></i>
@@ -104,7 +105,7 @@ export default {
   margin-bottom: 10px;
   background-color: #f9f9f9;
   padding: 10px;
-  border-radius: 4px;
+  
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
@@ -114,11 +115,12 @@ export default {
   justify-content: center;
   width: 36px;
   height: 36px;
-  border-radius: 50%;
-  background-color: #f0f0f0;
+  border-radius: 50% ;
+  border-radius: 4px ;
+  background-color: #048bfa;
   font-size: 16px;
   font-weight: bold;
-  color: #555;
+  color: #ffffff;
   margin-right: 10px;
 }
 

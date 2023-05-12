@@ -1,18 +1,20 @@
 <template >
     <div class="cont">
+      <h1  class="app-title">Cafe Bill Splitter</h1>
+      
       <div v-if="currentScreen === 'add-persons'" class="add-person">
         <div class="add-person-content">
-        <add-persons
+        <add-persons style="add"
           :people="people"
           @add-people="addPeople"
           @delete-person="deletePerson"
         />
 
-        <button @click="currentScreen = 'add-positions'" class="next-button">Далее</button>
+        <Button @click="currentScreen = 'add-positions'" class="p-mt-3 add-button">Далее<i class="pi pi-chevron-right"></i></Button>
       </div> </div>
       <div v-else-if="currentScreen === 'add-positions'">
         <add-positions :people="people" @add-position="addPosition" />
-        <button @click="currentScreen = 'choose-eaten'">Далее</button>
+        <button @click="currentScreen = 'choose-eaten'">Далее <i class="pi pi-chevron-right"></i></button>
       </div>
       <div v-else-if="currentScreen === 'choose-eaten'">
         <choose-eaten
@@ -33,6 +35,11 @@
   </template>
   
   <script>
+  import Button from "primevue/button";
+
+import "primevue/resources/themes/saga-blue/theme.css";
+import "primevue/resources/primevue.min.css";
+import "primeicons/primeicons.css";
   import AddPersons from "./components/AddPerson.vue";
   import AddPositions from "./components/AddPosition.vue";
   import ChooseEaten from "./components/ChooseEaten.vue";
@@ -44,6 +51,7 @@
       AddPositions,
       ChooseEaten,
       ListPositions,
+      Button
     },
     data() {
       return {
@@ -86,18 +94,41 @@
   </script>
 
   <style>
- .cont {
-  background-color: #111520;
-  background-image: url(./img.png); /* Путь к вашей картинке */
-  background-repeat: no-repeat;
-  background-position: right;
-  width: 100%;
-  height: 1000px;
+
+
+  @import url('https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+
+.app-title {
+  font-family: 'Indie Flower', cursive;
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+  color: #333;
+  /* Дополнительные стили, если необходимо */
 }
+ .cont {
+  margin: auto;
+  
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Горизонтальное смещение, вертикальное смещение, размытие, цвет тени */
+margin-top: 50px;
+  
+ padding: 30px;
+ border: 1px solid #ccc;
+ max-width: 400px;
+ text-align: center;
+ 
  
 
+}
+ .add{
+  margin-top: 50px;
+ }
+
 .next-button {
-  background-color: #4caf50;
+  background-color: #048bfa;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -118,15 +149,7 @@
 }
 
 .add-person {
-  background-color: white;
-  margin: auto;
-  
-  padding: 30px;
-  border: 1px solid #ccc;
-  max-width: 400px;
-  text-align: center;
-  
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Горизонтальное смещение, вертикальное смещение, размытие, цвет тени */
+ 
 }
 
 

@@ -1,100 +1,206 @@
 <template >
-    <div class="cont">
-      <h1  class="app-title">Cafe Bill Splitter</h1>
-      
-      <div v-if="currentScreen === 'add-persons'" class="add-person">
-        <div class="add-person-content">
-        <add-persons style="add"
-          :people="people"
-          @add-people="addPeople"
-          @delete-person="deletePerson"
-        />
-
-        <Button @click="currentScreen = 'add-positions'" class="p-mt-3 add-button">Далее<i class="pi pi-chevron-right"></i></Button>
-      </div> </div>
-      <div v-else-if="currentScreen === 'add-positions'">
-        <add-positions :people="people" @add-position="addPosition" />
-        <button @click="currentScreen = 'choose-eaten'">Далее <i class="pi pi-chevron-right"></i></button>
-      </div>
-      <div v-else-if="currentScreen === 'choose-eaten'">
-        <choose-eaten
-          :positions="positions"
-          :people="people"
-          :person="person"
-          @done="currentScreen = 'list-positions'"
-        />
-      </div>
-      <div v-else-if="currentScreen === 'list-positions'">
-        <list-positions 
-        :positions="positions" 
-        :people="people" 
-        :person="person"
-        />
-      </div>
+  <div class="cont">
+    <h1  class="app-title">Cafe Bill Splitter</h1>
+    
+    <div v-if="currentScreen === 'add-persons'" class="add-person">
+      <div class="add-person-content">
+      <add-persons style="add"
+        :people="people"
+        @add-people="addPeople"
+        @delete-person="deletePerson"
+      />
+      <button @click="currentScreen = 'add-positions'" class="p-mt-3 add-button addbtn btnn">
+        <span>Далее<i class="pi pi-chevron-right"></i></span>
+        <i class="i"></i>
+      </button>
+      <!-- <Button @click="currentScreen = 'add-positions'" class="p-mt-3 add-button">Далее<i class="pi pi-chevron-right"></i></Button> -->
+    </div> </div>
+    <div v-else-if="currentScreen === 'add-positions'">
+      <add-positions :people="people" @add-position="addPosition" />
+      <button @click="currentScreen = 'choose-eaten'" class="p-mt-3 add-button addbtn btnn">
+        <span>Далее<i class="pi pi-chevron-right"></i></span>
+        <i class="i"></i>
+      </button>
+      <!-- <button @click="currentScreen = 'choose-eaten'">Далее <i class="pi pi-chevron-right"></i></button> -->
     </div>
-  </template>
-  
-  <script>
-  import Button from "primevue/button";
+    <div v-else-if="currentScreen === 'choose-eaten'">
+      <choose-eaten
+        :positions="positions"
+        :people="people"
+        :person="person"
+        @done="currentScreen = 'list-positions'"
+      />
+    </div>
+    <div v-else-if="currentScreen === 'list-positions'">
+      <list-positions 
+      :positions="positions" 
+      :people="people" 
+      :person="person"
+      />
+    </div>
+  </div>
+</template>
+
+<script>
+// import Button from "primevue/button";
 
 import "primevue/resources/themes/saga-blue/theme.css";
 import "primevue/resources/primevue.min.css";
 import "primeicons/primeicons.css";
-  import AddPersons from "./components/AddPerson.vue";
-  import AddPositions from "./components/AddPosition.vue";
-  import ChooseEaten from "./components/ChooseEaten.vue";
-  import ListPositions from "./components/ListPositions.vue";
-  
-  export default {
-    components: {
-      AddPersons,
-      AddPositions,
-      ChooseEaten,
-      ListPositions,
-      Button
-    },
-    data() {
-      return {
-        currentScreen: "add-persons",
-        people: [],
-        positions: [],
-        personL: []
-      };
-    },
-    methods: {
-      deletePerson(person) {
-    const index = this.people.findIndex(p => p.id === person.id);
-    if (index !== -1) {
-      this.people.splice(index, 1);
-    }
+import AddPersons from "./components/AddPerson.vue";
+import AddPositions from "./components/AddPosition.vue";
+import ChooseEaten from "./components/ChooseEaten.vue";
+import ListPositions from "./components/ListPositions.vue";
+
+export default {
+  components: {
+    AddPersons,
+    AddPositions,
+    ChooseEaten,
+    ListPositions,
+    // Button
   },
-      addPeople(newPeople) {
-        this.people = newPeople;
-      },
-      addPosition(newPosition) {
-        this.positions.push(newPosition);
-      },
-      showPositionsScreen() {
-      this.currentScreen = "listPositions";
+  data() {
+    return {
+      currentScreen: "add-persons",
+      people: [],
+      positions: [],
+      personL: []
+    };
+  },
+  methods: {
+    deletePerson(person) {
+  const index = this.people.findIndex(p => p.id === person.id);
+  if (index !== -1) {
+    this.people.splice(index, 1);
+  }
+},
+    addPeople(newPeople) {
+      this.people = newPeople;
     },
-    showResultsScreen() {
-      this.currentScreen = "results";
+    addPosition(newPosition) {
+      this.positions.push(newPosition);
     },
-    calculatePersonCost(person) {
-      let totalCost = 0;
-      for (let position of this.positions) {
-        if (position.peopleEaten.includes(person)) {
-          totalCost += position.cost / position.peopleEaten.length;
-        }
+    showPositionsScreen() {
+    this.currentScreen = "listPositions";
+  },
+  showResultsScreen() {
+    this.currentScreen = "results";
+  },
+  calculatePersonCost(person) {
+    let totalCost = 0;
+    for (let position of this.positions) {
+      if (position.peopleEaten.includes(person)) {
+        totalCost += position.cost / position.peopleEaten.length;
       }
-      return totalCost;
-    },
-    },
-  };
-  </script>
+    }
+    return totalCost;
+  },
+  },
+};
+</script>
 
-  <style>
+  <style scoped>
+.pi-plus {
+  color: rgba(255, 255, 255, 0.5);
+}
 
+.btnn {
+  position: relative;
+  color: rgba(255, 255, 255, 0.616);
+  background: #444;
+  font-size: 1.0em;
+  letter-spacing: 0.1em;
+  font-weight: 400;
+  padding: 10px 30px;
+  transition: 0.5s;
+  text-decoration: none;
+  display: inline-block;
+  border: none;
+  cursor: pointer;
+}
+
+.btnn:hover {
+  color: #fff;
+  background: #048bfa;
+  letter-spacing: 0.25em;
+  transition: 0.5s;
+}
+
+.btnn:hover span i {
+  color: #fff;
+  letter-spacing: 0.25em;
+  transition: 0.5s;
+}
+
+.btnn::before {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  background: #27282c;
+}
+
+.btnn span {
+  position: relative;
+  z-index: 1;
+}
+
+.btnn .i {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.btnn .i::before {
+  content: "";
+  position: absolute;
+  top: -3.5px;
+  left: 80%;
+  width: 10px;
+  height: 6px;
+  background: #27282c;
+  border: 2px solid #048bfa;
+  transform: translateX(-50%);
+  transition: 0.5s, box-shadow 0.5s;
+}
+
+.btnn:hover .i::before {
+  width: 6px;
+  left: calc(50% - 3px);
+  border: 2px solid #048bfa;
+  box-shadow: 70px 0 #fff, -70px 0 #048bfa, -70px 0 0 4px #27282c, 10px -10px #048bfa  ;
+}
+.btnn .i::after {
+  content: "";
+  position: absolute;
+  bottom: -3.5px;
+  left: 20%;
+  width: 10px;
+  height: 6px;
+  background: #27282c;
+  border: 2px solid #048bfa;
+  transform: translateX(-50%);
+  transition: 0.5s, box-shadow 0.5s;
+}
+
+/* .btnn .i::after {
+  content: "";
+  position: absolute;
+  top: -3.5px;
+  left: 80%;
+  width: 10px;
+  height: 6px;
+  background: #27282c;
+  border: 2px solid #048bfa;
+  transform: translateX(-50%);
+  transition: 0.5s, box-shadow 0.5s;
+} */
+.btnn:hover .i::after {
+  width: 6px;
+  left: calc(50% - 3px);
+  border: 2px solid #048bfa;
+  box-shadow: 70px 0 #fff  ;
+}
 
   @import url('https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap');
 
@@ -108,12 +214,19 @@ import "primeicons/primeicons.css";
   color: #333;
   /* Дополнительные стили, если необходимо */
 }
+
+
+
  .cont {
   margin: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Горизонтальное смещение, вертикальное смещение, размытие, цвет тени */
-margin-top: 50px;
+
   
  padding: 30px;
  border: 1px solid #ccc;

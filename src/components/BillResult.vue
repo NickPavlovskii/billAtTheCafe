@@ -13,9 +13,12 @@
         <tbody>
           <tr v-for="(person, index) in people" :key="index">
             <td>{{ person.name }}</td>
-            <td class="cost-column">{{ personCosts[person.id] }} руб.</td>
+            <td class="cost-column">{{ personCosts[person.id].toFixed(2) }} руб.</td>
             <td>
-              <InputNumber class="input-number" v-model="personPaid[person.id]" />
+              <div data-v-4b44cc4c="" class="col-12 mb-2 lg:col-4 lg:mb-0">
+                <input data-v-4b44cc4c="" class="p-inputtext p-component" type="number" v-model="personPaid[person.id]">
+              </div>
+              <!-- <InputNumber class="input-number my-input" v-model="personPaid[person.id]" /> -->
             </td>
           </tr>
         </tbody>
@@ -35,12 +38,12 @@
 </template>
 
 <script>
-import InputNumber from 'primevue/inputnumber';
+// import InputNumber from 'primevue/inputnumber';
 import BillList from './BillList.vue';
 
 export default {
   components: {
-    InputNumber,
+    // InputNumber,
     BillList,
   },
   props: {
@@ -165,7 +168,10 @@ export default {
 
 
 <style scoped>
-
+.p-inputtext {
+  width: 150px; /* Измените значение, чтобы установить желаемую ширину */
+  border-radius: 10px; /* Измените значение, чтобы установить желаемую закругленность */
+}
 .btnn {
   margin-top: 30px;
   position: relative;

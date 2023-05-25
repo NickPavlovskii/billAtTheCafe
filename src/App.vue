@@ -1,7 +1,13 @@
 <template >
   <div class="cont">
+  
+    <i class="pi pi-home app-icon app-icons" @click="navigateToHome"></i>
+      <i class="pi pi-cog app-icon app-icons" @click="navigateToSettings"></i>
+ 
+      <i class="pi pi-share-alt app-icon app-icon-Share " @click="showShareOptions"></i>
+  <my-share/>
     <h1  class="app-title">Cafe Bill Splitter</h1>
-    
+  
     <div v-if="currentScreen === 'add-persons'" class="add-person">
       <div class="add-person-content">
       <add-persons style="add"
@@ -17,7 +23,7 @@
     </div> 
   </div>
     <div v-else-if="currentScreen === 'add-positions'">
-      <add-positions :people="people" :positions="positions" @add-position="addPosition"  />
+      <add-positions :people="people" :positions="positions" @add-position="addPosition" @remove-position="removePosition"  />
       <button @click="currentScreen = 'bill-result'" class="p-mt-3 add-button addbtn btnn">
         <span>Результат<i class="pi pi-chevron-right"></i></span>
         <i class="i"></i>
@@ -52,15 +58,15 @@ import AddPersons from "./components/AddPerson.vue";
 import AddPositions from "./components/AddPosition.vue";
 import BillResult from "./components/BillResult.vue";
 // import BillList from "./components/BillList.vue";
-
+import MyShare from "./components/MyShare";
 
 export default {
   components: {
     AddPersons,
     AddPositions,
     BillResult,
-    // BillList
-    // Button
+    MyShare
+   
   },
 
 
@@ -78,6 +84,17 @@ export default {
   const index = this.people.findIndex(p => p.id === person.id);
   if (index !== -1) {
     this.people.splice(index, 1);
+  }
+},
+navigateToHome() {
+    // Добавьте здесь логику перехода на главный экран
+    // Например, изменение значения currentScreen на 'add-persons'
+    this.currentScreen = 'add-persons';
+  },
+removePosition(position) {
+  const index = this.positions.findIndex(p => p.id === position.id);
+  if (index !== -1) {
+    this.positions.splice(index, 1);
   }
 },
     addPeople(newPeople) {
@@ -108,6 +125,27 @@ export default {
   <style scoped>
 .pi-plus {
   color: rgba(255, 255, 255, 0.5);
+}
+.app-icons{
+  margin-left: 10px;
+  position: relative;
+  right: 110px;
+}
+.app-icon-Share{
+  margin-left: 10px;
+  position: relative;
+  left: 90px;
+}
+
+ .app-icon {
+
+  font-size: 24px;
+
+  cursor: pointer;
+}
+
+.app-icon:hover {
+color: #048bfa;
 }
 
 .btnn {

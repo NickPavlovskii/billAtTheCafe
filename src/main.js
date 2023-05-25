@@ -1,18 +1,17 @@
 import { createApp } from 'vue'
+import PrimeVue from 'primevue/config';
 import App from './App.vue'
-// import AddPerson from './components/AddPerson.vue'
-// import AddPosition from './components/AddPosition.vue'
-createApp(App).mount('#app')
-// import { createRouter, createWebHistory } from 'vue-router'
 
-// const router = createRouter({
-//   history: createWebHistory(),
-//   routes: [
-//     { path: '/add-person', component: AddPerson },
-//     { path: '/add-position', component: AddPosition }
-//   ]
-// })
 
-// createApp(App).use(router).mount('#app')
 
-// export { router }
+// import 'bootstrap/dist/css/bootstrap.css'
+// import 'bootstrap-vue/dist/bootstrap-vue.css'
+
+
+const app = createApp(App);
+
+app.use(PrimeVue);
+
+
+
+app.mount('#app');

@@ -14,30 +14,31 @@
         <i class="i"></i>
       </button>
       <!-- <Button @click="currentScreen = 'add-positions'" class="p-mt-3 add-button">Далее<i class="pi pi-chevron-right"></i></Button> -->
-    </div> </div>
+    </div> 
+  </div>
     <div v-else-if="currentScreen === 'add-positions'">
-      <add-positions :people="people" @add-position="addPosition" />
-      <button @click="currentScreen = 'choose-eaten'" class="p-mt-3 add-button addbtn btnn">
-        <span>Далее<i class="pi pi-chevron-right"></i></span>
+      <add-positions :people="people" :positions="positions" @add-position="addPosition"  />
+      <button @click="currentScreen = 'bill-result'" class="p-mt-3 add-button addbtn btnn">
+        <span>Результат<i class="pi pi-chevron-right"></i></span>
         <i class="i"></i>
       </button>
       <!-- <button @click="currentScreen = 'choose-eaten'">Далее <i class="pi pi-chevron-right"></i></button> -->
     </div>
-    <div v-else-if="currentScreen === 'choose-eaten'">
-      <choose-eaten
+    <div v-else-if="currentScreen === 'bill-result'">
+      <bill-result
         :positions="positions"
         :people="people"
-        :person="person"
-        @done="currentScreen = 'list-positions'"
+        
+    
       />
+      <!-- <button @click="currentScreen = 'bill-list'" class="p-mt-3 add-button addbtn btnn  ">
+        <span>Кто кому должен</span>
+        <i class="i"></i>
+      </button> -->
     </div>
-    <div v-else-if="currentScreen === 'list-positions'">
-      <list-positions 
-      :positions="positions" 
-      :people="people" 
-      :person="person"
-      />
-    </div>
+    <!-- <div v-else-if="currentScreen === 'bill-list'">
+      <bill-list :debts="debts" />
+    </div> -->
   </div>
 </template>
 
@@ -49,23 +50,27 @@ import "primevue/resources/primevue.min.css";
 import "primeicons/primeicons.css";
 import AddPersons from "./components/AddPerson.vue";
 import AddPositions from "./components/AddPosition.vue";
-import ChooseEaten from "./components/ChooseEaten.vue";
-import ListPositions from "./components/ListPositions.vue";
+import BillResult from "./components/BillResult.vue";
+// import BillList from "./components/BillList.vue";
+
 
 export default {
   components: {
     AddPersons,
     AddPositions,
-    ChooseEaten,
-    ListPositions,
+    BillResult,
+    // BillList
     // Button
   },
+
+
+
   data() {
     return {
       currentScreen: "add-persons",
       people: [],
       positions: [],
-      personL: []
+     
     };
   },
   methods: {
@@ -79,8 +84,8 @@ export default {
       this.people = newPeople;
     },
     addPosition(newPosition) {
-      this.positions.push(newPosition);
-    },
+    this.positions.push(newPosition);
+  },
     showPositionsScreen() {
     this.currentScreen = "listPositions";
   },
@@ -106,6 +111,7 @@ export default {
 }
 
 .btnn {
+  margin-top: 30px;
   position: relative;
   color: rgba(255, 255, 255, 0.616);
   background: #444;
@@ -183,18 +189,7 @@ export default {
   transition: 0.5s, box-shadow 0.5s;
 }
 
-/* .btnn .i::after {
-  content: "";
-  position: absolute;
-  top: -3.5px;
-  left: 80%;
-  width: 10px;
-  height: 6px;
-  background: #27282c;
-  border: 2px solid #048bfa;
-  transform: translateX(-50%);
-  transition: 0.5s, box-shadow 0.5s;
-} */
+
 .btnn:hover .i::after {
   width: 6px;
   left: calc(50% - 3px);

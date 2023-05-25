@@ -13,34 +13,41 @@
         </div>
       </label>
       <div class="button-wrapper">
-        <!-- Кнопка с иконкой плюс для добавления человека -->
-        <Button type="submit" class="p-mt-3 add-button">
+     
+
+        <button type="submit" class="p-mt-3 add-button_1">
           <!-- Обертка для иконки плюс в виде кружка -->
           <span class="button-icon-wrapper">
             <i class="pi pi-plus"></i>
           </span>
-          Добавить
-        </Button>
+          <span class="dob"> Добавить</span>
+         <i class="i"></i>
+        </button>
+
       </div>
     </form>
     <div class="Added_persons" v-if="people.length > 0">
       <h3>Добавленные персоны:</h3>
+      <div class="person-list-wrapper">
       <ul class="person-list">
         <li v-for="person in people" :key="person.id" class="person-item">
           <!-- Аватар персоны с первой буквой имени -->
+         
           <div class="avatar">{{ person.name[0] }}</div>
           <span class="person-name">{{ person.name }}</span>
-          <!-- Иконка удаления персоны -->
+         
           <i class="pi pi-times person-delete-icon" @click="deletePerson(person)"></i>
         </li>
       </ul>
+</div>
     </div>
   </div>
 </template>
 
 <script>
+
 import InputText from "primevue/inputtext";
-import Button from "primevue/button";
+// import Button from "primevue/button";
 import "primevue/resources/themes/saga-blue/theme.css";
 import "primevue/resources/primevue.min.css";
 import "primeicons/primeicons.css";
@@ -48,7 +55,8 @@ import "primeicons/primeicons.css";
 export default {
   components: {
     InputText,
-    Button 
+    
+    // Button 
   },
   data() {
     return {
@@ -86,10 +94,100 @@ export default {
 </script>
 
 <style scoped>
+.button-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.button-wrapper button {
+
+  position:relative;
+  display: flex;
+  background-color:#27282c;
+  color: #27282c;
+  letter-spacing: 0.1em;
+  font-weight: 400;
+  padding: 10px 20px;
+  transition: 0.5s;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.button-wrapper button:hover {
+  /* background: #048bfa;
+  color: #048bfa; */
+  letter-spacing: 0.25em;
+  /* box-shadow: 0 0 15px #048bfa; */
+}
+
+.button-wrapper button:hover .pi-plus {
+  /* color: #048bfa; */
+  letter-spacing: 0.25em;
+  transition: 0.5s;
+} 
+
+.button-wrapper button::before {
+  content: '';
+  background: white;
+  inset: 2px;
+  position:absolute;
+}
+
+.button-wrapper button span {
+  position: relative;
+  z-index: 1;
+}
+
+.button-wrapper button .i {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.button-wrapper button .i::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 80%;
+  width: 25px;
+  height: 10px;
+  background: white;
+  transform: translateX(-50%) skewX(325deg);
+  transition: 0.5s;
+}
+
+.button-wrapper button:hover .i::before {
+  width: 28px;
+  left: 20%;
+}
+
+.button-wrapper button .i::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 20%;
+  width: 25px;
+  height: 6px;
+  background: white;
+  transform: translateX(-50%) skewX(325deg);
+  transition: 0.5s;
+}
+
+.button-wrapper button:hover .i::after {
+  width: 28px;
+  left: 80%;
+}
+
+.button-wrapper button .pi-plus {
+  color: #27282c;
+  margin-right: 8px;
+}
+
 .pi-plus {
   color: rgba(255, 255, 255, 0.616);
 }
-
 .add-button {
   background: #27282c;
   font-size: 1.0em;
@@ -107,11 +205,9 @@ export default {
 }
 
 .add-button .button-icon-wrapper {
-  background:white;
- 
-  border-radius: 50%  ;
+  
   padding: 0.25rem;
-  margin-right: 0.8rem;
+  margin-right: 0.6rem;
 }
 
 .add-button .button-icon-wrapper i {
@@ -119,7 +215,7 @@ export default {
 }
 
 .add-person-container {
-  padding: 20px;
+  padding:0 20px 250px 20px;
   border-radius: 4px;
 }
 
@@ -139,12 +235,22 @@ export default {
 }
 
 .button-wrapper {
+ 
   margin-top: 20px;
 }
+
+.person-list-wrapper {
+  position: relative;
+  
+}
 .person-list {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   list-style-type: none;
   padding: 0;
-  height: 180px;
+  height: 190px;
   overflow-y: auto;
   overflow-x: hidden;
   border-radius: 4px;
@@ -179,8 +285,8 @@ export default {
   justify-content: center;
   width: 36px;
   height: 36px;
-  border-radius: 50%;
-  border: 3px solid #7ec7fc;
+  border-radius: 50%; 
+  border: 1px solid #27282c;
   background-color: #048bfa;
   font-size: 16px;
   font-weight: bold;
@@ -191,8 +297,8 @@ export default {
 .person-name {
   font-size: 16px;
   font-family: "Verdana", sans-serif;
+  color: #27282c;
 }
-
 .person-delete-icon {
   font-size: 16px;
   color: #999;

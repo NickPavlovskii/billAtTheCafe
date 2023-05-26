@@ -4,8 +4,8 @@
     <i class="pi pi-home app-icon app-icons" @click="navigateToHome"></i>
       <i class="pi pi-cog app-icon app-icons" @click="navigateToSettings"></i>
  
-      <i class="pi pi-share-alt app-icon app-icon-Share " @click="showShareOptions"></i>
-  <my-share/>
+     
+  <my-share class="share-container"/>
     <h1  class="app-title">Cafe Bill Splitter</h1>
   
     <div v-if="currentScreen === 'add-persons'" class="add-person">
@@ -37,14 +37,9 @@
         
     
       />
-      <!-- <button @click="currentScreen = 'bill-list'" class="p-mt-3 add-button addbtn btnn  ">
-        <span>Кто кому должен</span>
-        <i class="i"></i>
-      </button> -->
+     
     </div>
-    <!-- <div v-else-if="currentScreen === 'bill-list'">
-      <bill-list :debts="debts" />
-    </div> -->
+    <div class="niklad-tag">@Niklad</div>
   </div>
 </template>
 
@@ -123,6 +118,21 @@ removePosition(position) {
 </script>
 
   <style scoped>
+  .niklad-tag {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  padding: 0px 2px;
+
+  font-size: 14px;
+ 
+ 
+}
+  .share-container{
+    position: absolute;
+    top: 15px;
+  right: 15px;
+  }
 .pi-plus {
   color: rgba(255, 255, 255, 0.5);
 }
@@ -139,7 +149,7 @@ removePosition(position) {
 
  .app-icon {
 
-  font-size: 24px;
+  font-size: 22px;
 
   cursor: pointer;
 }

@@ -104,6 +104,9 @@ export default {
     if (this.totalCost > this.totalPaid) {
       this.showModal = true;
     }
+    else{
+      this.currentScreen = 'bill-list'
+    }
   },
     done() {
       // Emit event with personPaid data

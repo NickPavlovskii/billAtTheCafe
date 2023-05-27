@@ -39,15 +39,15 @@
     <i class="i"></i>
   </button>
    <!-- Модальное окно -->
-   <div v-if="showModal" class="modal-overlay" @click="closeModal">
+
+  </div>
+  <div v-if="showModal" class="modal-overlay" @click="closeModal">
     <div class="modal-content">
       <h3 v-if="!isNameValid">Напишите название</h3>
       <h3 v-else-if="!isPriceValid">Бесплатно?</h3>
       <h3 v-else-if="!isPeopleSelected">Выберите, кто ел</h3>
-      <button @click="closeModal" class="p-button ok-button">Ок</button>
+      <button @click="closeModal" class="ok-button">Ок</button>
     </div>
-  </div>
-      
       </div>
     </form>
 
@@ -232,7 +232,6 @@ export default {
   color: white;
   transition: background-color 0.3s;
 }
-
 .ok-button:hover {
   background-color: #0056b3;
 }

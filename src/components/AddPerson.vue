@@ -4,7 +4,7 @@
     <form @submit.prevent="addPerson">
       <label>
         <div class="p-inputgroup flex-">
-          <!-- Иконка пользователя с возможностью активации -->
+  
           <span class="p-inputgroup-addon">
             <i :class="['pi pi-user', { 'input-group-user': isInputActive }]"></i>
           </span>
@@ -16,14 +16,18 @@
      
 
         <button type="submit" class="p-mt-3 add-button_1">
-          <!-- Обертка для иконки плюс в виде кружка -->
+        
           <span class="button-icon-wrapper">
             <i class="pi pi-plus"></i>
           </span>
           <span class="dob"> Добавить</span>
          <i class="i"></i>
         </button>
-
+       
+      </div>
+      <div v-if="people.length === 0" class="add-someone-text">
+        <p>Добавим кого-нибудь!</p>
+        <i class="pi pi-user-plus"></i>
       </div>
     </form>
     <div class="Added_persons" v-if="people.length > 0">
@@ -94,6 +98,22 @@ export default {
 </script>
 
 <style scoped>
+
+.add-someone-text {
+  position: relative;
+  top: 100px;
+  text-align: center;
+}
+
+.add-someone-text p {
+  font-size: 25px;
+  margin-bottom: 10px;
+}
+
+.add-someone-text i {
+  font-size: 40px;
+  color: green;
+}
 .button-wrapper {
   display: flex;
   justify-content: center;
@@ -217,6 +237,7 @@ export default {
 .add-person-container {
   padding:0 20px 250px 20px;
   border-radius: 4px;
+  height: 400px;
 }
 
 .input-group {

@@ -4,17 +4,17 @@
       <i class="pi pi-share-alt app-iconn"></i>
     </div>
     <li style="--i:0; --clr:#1877f2">
-      <a href="">
+      <a href="https://github.com/NickPavlovskii">
         <i class=" pi pi-github icn" style="--clr: gray"></i>
       </a>  
     </li>
        <li style="--i:1; --clr: #c32aa3">
-      <a href="">
+      <a href="https://www.instagram.com/o__niklad__o/?hl=ru">
       <font-awesome-icon icon="fa-brands fa-instagram icn" class="icn" />
       </a>
-    </li>
+    </li>  
     <li style="--i:2;--clr:#7289da">
-      <a href="">
+      <a href="https://discordapp.com/users/318683913579134977/ ">
        <font-awesome-icon icon="fa-brands fa-discord " class="icn"/>
       </a>
     </li>
@@ -24,17 +24,17 @@
       </a>
     </li>
     <li style="--i:4;--clr:#4e76a8">
-      <a href="">
+      <a href="https://vk.com/o_0niklad0_o">
         <font-awesome-icon icon="fa-brands fa-vk icn"  class="icn"/>
       </a>
     </li>
     <li style="--i:5;--clr:#1877f2">
-      <a href="">
+      <a href="https://t.me/N1klad">
         <font-awesome-icon icon="fa-brands fa-telegram icn" class="icn" />
       </a>
     </li>
     <li style="--i:6;--clr:orange">
-      <a href="">
+      <a href="https://gitlab.com/">
         <font-awesome-icon icon="fa-brands fa-gitlab icn" class="icn" />
       </a>
     </li>

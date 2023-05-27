@@ -1,51 +1,85 @@
-<template >
+<template>
   <div class="cont">
-  
-    <i class="pi pi-home app-icon app-icons" @click="navigateToHome"></i>
-      <i class="pi pi-cog app-icon app-icons" @click="navigateToSettings"></i>
- 
-     
-  <my-share class="share-container"/>
-    <h1  class="app-title">Cafe Bill Splitter</h1>
-  
-    <div v-if="currentScreen === 'add-persons'" class="add-person">
-      <div class="add-person-content">
-      <add-persons style="add"
-        :people="people"
-        @add-people="addPeople"
-        @delete-person="deletePerson"
-      />
-      <button @click="currentScreen = 'add-positions'" class="p-mt-3 add-button addbtn btnn">
-        <span>Далее<i class="pi pi-chevron-right"></i></span>
-        <i class="i"></i>
-      </button>
-      <!-- <Button @click="currentScreen = 'add-positions'" class="p-mt-3 add-button">Далее<i class="pi pi-chevron-right"></i></Button> -->
-    </div> 
+    <i class="pi pi-home app-icon app-icons app-icons-home" @click="navigateToHome"></i>
+    <i class="pi pi-cog app-icon app-icons" @click="navigateToSettings"></i>
+
+    <my-share class="share-container" />
+    <h1 class="app-title">Cafe Bill Splitter</h1>
+    <div v-if="currentScreen === 'main-component'" style="height: 300px; z-index: 2;">
+      <h1>Добро пожаловать в Cafe Bill Splitter</h1>
+      <div class="btns">
+      <button @click="navigateToPersons" style="z-index: 5;">Начать</button>
+    <button class="instruction-button" @click="showInstructions"><Icon style="color: yellow; font-weight: bold; " icon="fluent-mdl2:hint-text" /></button>
   </div>
+    <div v-if="showModalMain" class="modal">
+      <div class="modal-content">
+        <h2><Icon icon="fluent-mdl2:hint-text" /></h2>
+        <ol>
+          <li>Шаг 1: Добавьте участников счета, нажав кнопку "Добавить участников".</li>
+          <li>Шаг 2: Добавьте позиции счета, указав название и цену для каждой позиции.</li>
+          <li>Шаг 3: Проверьте результаты разделения счета на вкладке "Результат".</li>
+        </ol>
+        <p>Вы также можете удалить участника или позицию, кликнув на соответствующую кнопку.</p>
+        <button @click="closeModal">Закрыть</button>
+      </div>
+    </div>
+    
+    <img src="cofe.png" class="background-image" />
+    </div>
+
+    <div v-else-if="currentScreen === 'add-persons'" class="add-person">
+      <div class="add-person-content">
+        <add-persons style="add"
+          :people="people"
+          @add-people="addPeople"
+          @delete-person="deletePerson"
+        />
+        <button @click="goToNextScreen('add-positions')" class="p-mt-3 add-button addbtn btnn">
+          <span>Далее<i class="pi pi-chevron-right"></i></span>
+          <i class="i"></i>
+        </button>
+      </div>
+    </div>
     <div v-else-if="currentScreen === 'add-positions'">
-      <add-positions :people="people" :positions="positions" @add-position="addPosition" @remove-position="removePosition"  />
-      <button @click="currentScreen = 'bill-result'" class="p-mt-3 add-button addbtn btnn">
+      <add-positions
+  :people="people"
+  :positions="positions"
+  :is-name-valid="isNameValid"
+  :is-price-valid="isPriceValid"
+  :is-people-selected="isPeopleSelected"
+  @add-position="addPosition"
+  @remove-position="removePosition"
+/>
+      <button @click="openPositionModal('bill-result')" class="p-mt-3 add-button addbtn btnn">
         <span>Результат<i class="pi pi-chevron-right"></i></span>
         <i class="i"></i>
       </button>
-      <!-- <button @click="currentScreen = 'choose-eaten'">Далее <i class="pi pi-chevron-right"></i></button> -->
     </div>
     <div v-else-if="currentScreen === 'bill-result'">
-      <bill-result
-        :positions="positions"
-        :people="people"
-        
-    
-      />
-     
+      <bill-result :positions="positions" :people="people" />
     </div>
     <div class="niklad-tag">@Niklad</div>
+   <!-- People Modal Modal -->
+    <div v-if="showModal" class="modal-overlay" @click="closeModal">
+      <div class="modal-content">
+        <h3 v-if="people.length === 0">Но тут же никого нет 🤔 </h3>
+        <h3 v-else-if="people.length === 1">Добавьте еще кого-нибудь!</h3>
+        <button @click="showModal = false" class="p-button">Ок</button>
+      </div>
+    </div>
+     <!-- Position Modal -->
+     <div v-if="showPositionModal" class="modal-overlay" @click="closePositionModal">
+      <div class="modal-content">
+        <h3>Должно быть добавлено как минимум 2 позиции</h3>
+        <button @click=" showPositionModal = false" class="p-button">Ок</button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 // import Button from "primevue/button";
-
+import { Icon } from '@iconify/vue';
 import "primevue/resources/themes/saga-blue/theme.css";
 import "primevue/resources/primevue.min.css";
 import "primeicons/primeicons.css";
@@ -54,27 +88,68 @@ import AddPositions from "./components/AddPosition.vue";
 import BillResult from "./components/BillResult.vue";
 // import BillList from "./components/BillList.vue";
 import MyShare from "./components/MyShare";
-
+// import  MainComponent from "./components/MainComponent";
 export default {
   components: {
+    Icon,
     AddPersons,
     AddPositions,
     BillResult,
-    MyShare
-   
+    MyShare,
+    // MainComponent
+
   },
 
-
+  props: {
+    isNameValid: Boolean,
+    isPriceValid: Boolean,
+    isPeopleSelected: Boolean,
+  },
 
   data() {
     return {
-      currentScreen: "add-persons",
+      currentScreen: "main-component",
       people: [],
       positions: [],
+      showModal: false,
+      showPositionModal: false,
+      showModalMain: false,
      
     };
   },
+
   methods: {
+    navigateToPersons() {
+    this.currentScreen = 'add-persons';
+  },
+
+    showInstructions() {
+      this.showModalMain = true;
+    },
+    closeModal() {
+      this.showModalMain = false;
+    },
+ 
+    openPositionModal(nextScreen) {
+      if (this.positions.length < 2) {
+        this.showPositionModal = true;
+      } else {
+        this.currentScreen = nextScreen;
+      }
+    },
+    closePositionModal() {
+      this.showPositionModal = false;
+    },
+    
+    goToNextScreen(nextScreen) {
+      if (this.people.length >= 2) {
+        this.currentScreen = nextScreen;
+      } else {
+        this.showModal = true;
+      }
+    },
+
+
     deletePerson(person) {
   const index = this.people.findIndex(p => p.id === person.id);
   if (index !== -1) {
@@ -84,14 +159,14 @@ export default {
 navigateToHome() {
     // Добавьте здесь логику перехода на главный экран
     // Например, изменение значения currentScreen на 'add-persons'
-    this.currentScreen = 'add-persons';
+    this.currentScreen = 'main-component';
   },
-removePosition(position) {
-  const index = this.positions.findIndex(p => p.id === position.id);
-  if (index !== -1) {
-    this.positions.splice(index, 1);
-  }
-},
+  removePosition(position) {
+    const index = this.positions.findIndex(p => p.id === position.id);
+    if (index !== -1) {
+      this.positions.splice(index, 1);
+    }
+  },
     addPeople(newPeople) {
       this.people = newPeople;
     },
@@ -117,7 +192,107 @@ removePosition(position) {
 };
 </script>
 
+
   <style scoped>
+
+  .background-image {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200px;
+  height: 200px;
+  z-index: -1;
+}
+ .btns{
+  margin-top: 120px;
+ }
+  .MainComponent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.start-button {
+  padding: 10px 20px;
+  font-size: 18px;
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.instruction-button {
+  background-color: #27282c;
+  margin-left: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+
+  color: #333;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 5;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+  .modal-overlay {
+    z-index: 999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  text-align: center;
+  border: 4px solid #27282c;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+}
+
+.modal-content button {
+  margin-top: 20px;
+  background: #27282c;
+}
   .niklad-tag {
   position: absolute;
   bottom: 10px;
@@ -128,18 +303,23 @@ removePosition(position) {
  
  
 }
+
+
   .share-container{
     position: absolute;
     top: 15px;
   right: 15px;
   }
+  
 .pi-plus {
   color: rgba(255, 255, 255, 0.5);
 }
 .app-icons{
-  margin-left: 10px;
+  margin-left: 12px;
   position: relative;
-  right: 110px;
+  right: 130px;
+  margin-top: 12px;
+ 
 }
 .app-icon-Share{
   margin-left: 10px;
@@ -148,12 +328,17 @@ removePosition(position) {
 }
 
  .app-icon {
-
+  position: relative;
+  bottom: 5px;
   font-size: 22px;
-
+  transition: 1.25s;
   cursor: pointer;
 }
+.app-icons-home{
+  position: relative;
 
+  font-size: 1.5em;
+}
 .app-icon:hover {
 color: #048bfa;
 }

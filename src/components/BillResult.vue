@@ -12,24 +12,33 @@
         </thead>
         <tbody>
           <tr v-for="(person, index) in people" :key="index">
-            <td>{{ person.name }}</td>
-            <td class="cost-column">{{ personCosts[person.id].toFixed(2) }} руб.</td>
-            <td>
-              <div data-v-4b44cc4c="" class="col-12 mb-2 lg:col-4 lg:mb-0">
-                <input data-v-4b44cc4c="" class="p-inputtext p-component" type="number" v-model="personPaid[person.id]">
-              </div>
-              <!-- <InputNumber class="input-number my-input" v-model="personPaid[person.id]" /> -->
-            </td>
-          </tr>
+    <td>{{ person.name }}</td>
+    <td class="cost-column">{{ personCosts[person.id].toFixed(2) }} руб.</td>
+    <td>
+      <div class="col-12 mb-2 lg:col-4 lg:mb-0">
+        <input class="p-inputtext p-component" v-model="personPaid[person.id]" />
+      </div>
+    </td>
+  </tr>
         </tbody>
       </table>
       <div class="tips">
         Общие чаевые: <span class="tip-amount">{{ calculateTips() }} руб.</span>
       </div>
-      <button @click="currentScreen = 'bill-list'" class="p-mt-3 add-button addbtn btnn">
+      <button @click="showModalIfDebtExists" class="p-mt-3 add-button addbtn btnn">
         <span>Кто кому должен</span>
         <i class="i"></i>
       </button>
+
+<!-- Модальное окно -->
+<div v-if="showModal" class="modal">
+    <div class="modal-content">
+      <h3>Вы еще должны {{ (totalCost - totalPaid).toFixed(2) }} руб.</h3>
+      <p>Пожалуйста, введите достаточную сумму, чтобы покрыть все расходы.</p>
+      <button @click="showModal = false">Закрыть</button>
+    </div>
+  </div>
+
     </div>
     <div v-else>
       <BillList :debts="debts" />
@@ -57,7 +66,14 @@ export default {
     },
   },
   computed: {
-    personCosts() {
+    totalCost() {
+    return Object.values(this.personCosts).reduce((sum, cost) => sum + cost, 0);
+  },
+
+  totalPaid() {
+    return Object.values(this.personPaid).reduce((sum, paid) => sum + parseFloat(paid || 0), 0);
+  },
+  personCosts() {
       const costs = {};
 
       for (const person of this.people) {
@@ -80,9 +96,15 @@ export default {
     return {
       personPaid: {},
       currentScreen: 'result',
+      showModal: false,
     };
   },
   methods: {
+    showModalIfDebtExists() {
+    if (this.totalCost > this.totalPaid) {
+      this.showModal = true;
+    }
+  },
     done() {
       // Emit event with personPaid data
       this.$emit('done', this.personPaid);
@@ -168,6 +190,45 @@ export default {
 
 
 <style scoped>
+
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Убедитесь, что z-index достаточно большой, чтобы модальное окно было видимым над другими элементами */
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.modal h3 {
+  margin-top: 0;
+}
+
+.modal p {
+  margin-bottom: 10px;
+}
+
+.modal button {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
 .p-inputtext {
   width: 150px; /* Измените значение, чтобы установить желаемую ширину */
   border-radius: 10px; /* Измените значение, чтобы установить желаемую закругленность */

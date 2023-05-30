@@ -66,13 +66,15 @@ export default {
     },
   },
   computed: {
+    // Calculate the total cost of all positions
     totalCost() {
     return Object.values(this.personCosts).reduce((sum, cost) => sum + cost, 0);
   },
-
+ // Calculate the total amount paid by all people
   totalPaid() {
     return Object.values(this.personPaid).reduce((sum, paid) => sum + parseFloat(paid || 0), 0);
   },
+  // Calculate the total cost per person
   personCosts() {
       const costs = {};
 
@@ -88,18 +90,20 @@ export default {
 
       return costs;
     },
+        // Calculate the debts between people
     debts() {
       return this.calculateDebts();
     },
   },
   data() {
     return {
-      personPaid: {},
+      personPaid: {}, // Object to store the amount paid by each person
       currentScreen: 'result',
       showModal: false,
     };
   },
   methods: {
+         // Show the modal if there are outstanding debts
     showModalIfDebtExists() {
     if (this.totalCost > this.totalPaid) {
       this.showModal = true;
@@ -109,7 +113,7 @@ export default {
       // Emit event with personPaid data
       this.$emit('done', this.personPaid);
     },
-
+ // Calculate the total tips based on the total amount paid
     calculateTips() {
       let totalPaid = 0;
       for (const personId in this.personPaid) {
@@ -117,7 +121,7 @@ export default {
       }
       return totalPaid * 0.1; // Assuming 10% tips
     },
-
+// Calculate the debts between people
     calculateDebts() {
       const debts = {
         whoOwes: [],
@@ -129,7 +133,7 @@ export default {
         const paid = this.personPaid[person.id] || 0;
         let diff = paid - cost;
 
-        if (diff > 0) {
+        if (diff > 0) {  // If the person has paid more than their cost
           for (const otherPerson of this.people) {
             if (otherPerson !== person) {
               const otherPersonCost = this.personCosts[otherPerson.id];
@@ -151,7 +155,7 @@ export default {
               }
             }
           }
-        } else if (diff < 0) {
+        } else if (diff < 0) { // If the person has paid less than their cost
           for (const otherPerson of this.people) {
             if (otherPerson !== person) {
               const otherPersonCost = this.personCosts[otherPerson.id];

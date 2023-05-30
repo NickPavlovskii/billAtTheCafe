@@ -14,7 +14,7 @@
       </label>
       <div class="button-wrapper">
      
-
+ <!-- Кнопка добавления персоны -->
         <button type="submit" class="p-mt-3 add-button_1">
         
           <span class="button-icon-wrapper">
@@ -25,6 +25,7 @@
         </button>
        
       </div>
+      <!-- Текст, отображаемый при отсутствии добавленных персон -->
       <div v-if="people.length === 0" class="add-someone-text">
         <p>Добавим кого-нибудь!</p>
         <i class="pi pi-user-plus"></i>
@@ -77,9 +78,11 @@ export default {
     },
   },
   methods: {
+    // Обработчик удаления персоны
     deletePerson(person) {
       this.$emit("delete-person", person);
     },
+     // Обработчик добавления персоны
     addPerson() {
       if (this.newPerson.name.trim()) {
         const newPersonObject = {

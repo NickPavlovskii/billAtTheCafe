@@ -6,15 +6,18 @@
       <div class="form-group">
         <div class="p-inputgroup flex-1">
           <span class="p-inputgroup-addon">  <Icon icon="fluent:food-24-filled" width="32" height="32" /> </span>
+           <!-- Поле ввода названия позиции -->
           <InputText type="text" id="name" v-model="name" placeholder="Название" class="input-field" />
         </div>
       </div>
       <div class="p-inputgroup flex-1">
         <span class="p-inputgroup-addon"><Icon icon="ph:currency-rub-bold" width="32" height="32" /></span>
+        <!-- Поле ввода стоимости позиции -->
         <InputNumber id="price" v-model="price" placeholder="Стоимость" class="input-field" />
       </div>
       <div class="form-group "  >
         <div class="avatars-container">
+          <!-- Аватары для выбора людей, которые ели -->
           <div class="avatar" @click="selectAllPeople" :class="{ active: allPeopleSelected }">
             Все
           </div>
@@ -38,7 +41,7 @@
     </span>
     <i class="i"></i>
   </button>
-   <!-- Модальное окно -->
+     <!-- Модальное окно для ошибок -->
    <div v-if="showModal" class="modal-overlay" @click="closeModal">
     <div class="modal-content">
       <h3 v-if="!isNameValid">Напишите название</h3>
@@ -70,12 +73,12 @@
             </div>
           </div>
         </div>
-        <button @click="removePosition(index)" class="remove-button">
+        <button @click="removePosition(index)" class="remove-button">  <!-- Кнопка удаления позиции -->
           <i class="pi pi-trash"></i>
         </button>
       </li>
     </ul>
-
+    <!-- Промежуточный итог -->
     <div class="interim-total">
       <h3>Промежуточный итог:</h3>
       <p class="itog">

@@ -1,16 +1,21 @@
 <template>
   <div class="cont">
+    <!-- Home icon -->
     <i class="pi pi-home app-icon app-icons app-icons-home" @click="navigateToHome"></i>
+       <!-- Settings icon -->
     <i class="pi pi-cog app-icon app-icons" @click="navigateToSettings"></i>
-
+    <!-- Share component -->
     <my-share class="share-container" />
     <h1 class="app-title">Cafe Bill Splitter</h1>
+      <!-- Main component -->
     <div v-if="currentScreen === 'main-component'" style="height: 300px; z-index: 2;">
       <h1>Добро пожаловать в Cafe Bill Splitter</h1>
       <div class="btns">
+           <!-- Button to navigate to adding persons screen -->
       <button @click="navigateToPersons" style="z-index: 5;">Начать</button>
     <button class="instruction-button" @click="showInstructions"><Icon style="color: yellow; font-weight: bold; " icon="fluent-mdl2:hint-text" /></button>
   </div>
+  <!-- Modal for main instructions -->
     <div v-if="showModalMain" class="modal">
       <div class="modal-content">
         <h2><Icon icon="fluent-mdl2:hint-text" /></h2>
@@ -23,10 +28,10 @@
         <button @click="closeModal">Закрыть</button>
       </div>
     </div>
-    
+       <!-- Background image -->
     <img src="cofe.png" class="background-image" />
     </div>
-
+<!-- Add persons screen -->
     <div v-else-if="currentScreen === 'add-persons'" class="add-person">
       <div class="add-person-content">
         <add-persons style="add"
@@ -40,6 +45,9 @@
         </button>
       </div>
     </div>
+
+
+     <!-- Add positions screen -->
     <div v-else-if="currentScreen === 'add-positions'">
       <add-positions
   :people="people"
@@ -55,6 +63,8 @@
         <i class="i"></i>
       </button>
     </div>
+
+    <!-- Bill result screen -->
     <div v-else-if="currentScreen === 'bill-result'">
       <bill-result :positions="positions" :people="people" />
     </div>
@@ -78,6 +88,8 @@
 </template>
 
 <script>
+
+
 // import Button from "primevue/button";
 import { Icon } from '@iconify/vue';
 import "primevue/resources/themes/saga-blue/theme.css";
@@ -108,28 +120,30 @@ export default {
 
   data() {
     return {
-      currentScreen: "main-component",
-      people: [],
-      positions: [],
-      showModal: false,
-      showPositionModal: false,
-      showModalMain: false,
+      currentScreen: "main-component", // The current screen being displayed
+      people: [], // An array to store the list of people
+      positions: [], // An array to store the list of positions
+      showModal: false, // Flag to control the visibility of a modal
+      showPositionModal: false, // Flag to control the visibility of a position modal
+      showModalMain: false, // Flag to control the visibility of the main modal
      
     };
   },
 
   methods: {
+     // Method to navigate to the 'add-persons' screen
     navigateToPersons() {
     this.currentScreen = 'add-persons';
   },
-
+    // Method to show the instructions modal
     showInstructions() {
       this.showModalMain = true;
     },
+     // Method to close the instructions modal
     closeModal() {
       this.showModalMain = false;
     },
- 
+  // Method to open the position modal or navigate to the next screen
     openPositionModal(nextScreen) {
       if (this.positions.length < 2) {
         this.showPositionModal = true;
@@ -137,10 +151,11 @@ export default {
         this.currentScreen = nextScreen;
       }
     },
+    // Method to close the position modal
     closePositionModal() {
       this.showPositionModal = false;
     },
-    
+    // Method to navigate to the next screen or show a modal if conditions are not met
     goToNextScreen(nextScreen) {
       if (this.people.length >= 2) {
         this.currentScreen = nextScreen;
@@ -149,36 +164,45 @@ export default {
       }
     },
 
-
+ // Method to delete a person from the people array
     deletePerson(person) {
   const index = this.people.findIndex(p => p.id === person.id);
   if (index !== -1) {
     this.people.splice(index, 1);
   }
 },
+// Method to navigate to the 'main-component' screen
 navigateToHome() {
     // Добавьте здесь логику перехода на главный экран
     // Например, изменение значения currentScreen на 'add-persons'
     this.currentScreen = 'main-component';
   },
+  // Method to remove a position from the positions array
   removePosition(position) {
     const index = this.positions.findIndex(p => p.id === position.id);
     if (index !== -1) {
       this.positions.splice(index, 1);
     }
-  },
+  }, 
+  // Method to add new people to the people array
     addPeople(newPeople) {
       this.people = newPeople;
     },
+    // Method to add a new position to the positions array
     addPosition(newPosition) {
     this.positions.push(newPosition);
   },
+  // Method to show the 'listPositions' screen
     showPositionsScreen() {
     this.currentScreen = "listPositions";
   },
+  
+    // Method to show the 'results' screen
   showResultsScreen() {
     this.currentScreen = "results";
   },
+  
+    // Method to show the 'results' screen
   calculatePersonCost(person) {
     let totalCost = 0;
     for (let position of this.positions) {
@@ -193,7 +217,7 @@ navigateToHome() {
 </script>
 
 
-  <style scoped>
+  <style lang="scss"  scoped>
 
   .background-image {
   position: absolute;
@@ -357,40 +381,53 @@ color: #048bfa;
   display: inline-block;
   border: none;
   cursor: pointer;
-}
 
-.btnn:hover {
-  color: #fff;
+
+  &:hover {
+    color: #fff;
   background: #048bfa;
   letter-spacing: 0.25em;
   transition: 0.5s;
+  .i::before {
+  width: 6px;
+  left: calc(50% - 3px);
+  border: 2px solid #048bfa;
+  box-shadow: 70px 0 #fff, -70px 0 #048bfa, -70px 0 0 4px #27282c, 10px -10px #048bfa  ;
 }
 
-.btnn:hover span i {
+
+.i::after {
+  width: 6px;
+  left: calc(50% - 3px);
+  border: 2px solid #048bfa;
+  box-shadow: 70px 0 #fff  ;
+}
+  span i {
   color: #fff;
   letter-spacing: 0.25em;
   transition: 0.5s;
 }
-
-.btnn::before {
+}
+    
+&::before {
   content: "";
   position: absolute;
   inset: 2px;
   background: #27282c;
 }
+  
 
-.btnn span {
+span {
   position: relative;
   z-index: 1;
 }
-
-.btnn .i {
+.i {
   position: absolute;
   inset: 0;
   display: block;
-}
 
-.btnn .i::before {
+
+  &::before {
   content: "";
   position: absolute;
   top: -3.5px;
@@ -403,13 +440,8 @@ color: #048bfa;
   transition: 0.5s, box-shadow 0.5s;
 }
 
-.btnn:hover .i::before {
-  width: 6px;
-  left: calc(50% - 3px);
-  border: 2px solid #048bfa;
-  box-shadow: 70px 0 #fff, -70px 0 #048bfa, -70px 0 0 4px #27282c, 10px -10px #048bfa  ;
-}
-.btnn .i::after {
+
+&::after {
   content: "";
   position: absolute;
   bottom: -3.5px;
@@ -423,12 +455,26 @@ color: #048bfa;
 }
 
 
-.btnn:hover .i::after {
-  width: 6px;
-  left: calc(50% - 3px);
-  border: 2px solid #048bfa;
-  box-shadow: 70px 0 #fff  ;
+
 }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   @import url('https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap');
 

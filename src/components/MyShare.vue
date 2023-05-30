@@ -66,7 +66,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss"  scoped>
 .icn{
   color: var(--clr);
   transform: rotate(calc(360deg/7*var(--i)));
@@ -76,6 +76,42 @@ export default {
   display: flex;
  margin-top: 20px;
  margin-right: 20px;
+
+ & li a{
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ 
+  transform: rotate(calc(360deg/7*var(--i)));
+
+
+
+
+}
+ &.active li{
+
+scale: 1;
+
+}
+
+&.active .toggle {
+  transform: rotate(45deg);
+}
+
+
+ li{
+position: absolute;
+left:  -30px;
+list-style: none;
+transition: 0.5s;
+transform: rotate(calc(360deg/7*var(--i)));
+transform-origin: 45px;
+scale: 0;
+transition-delay: calc(0.05s * var(--i));
+}
+
+
 }
 
 .app-iconn {
@@ -101,46 +137,15 @@ export default {
 .toggle:hover .app-iconn{
     color: #048bfa;
 }
-.menu-items {
-  /* Add your styles for the menu items */
-}
 
 .toggle.active {
   transform: rotate(360deg);
   box-shadow: 0 5px 5px #048bfa, 0 0 0 2px #048bfa, 0 0 0 8px #fff;
 }
 
-.menu li{
-position: absolute;
-left:  -30px;
-list-style: none;
-transition: 0.5s;
-transform: rotate(calc(360deg/7*var(--i)));
-transform-origin: 45px;
-scale: 0;
-transition-delay: calc(0.05s * var(--i));
-}
-.menu.active li{
-
-  scale: 1;
-
-}
-.menu.active .toggle {
-  transform: rotate(45deg);
-}
-
-.menu li a{
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
- 
-  transform: rotate(calc(360deg/7*var(--i)));
 
 
 
-
-}
  </style>
 
   

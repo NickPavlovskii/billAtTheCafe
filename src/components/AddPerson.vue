@@ -52,7 +52,7 @@
 <script>
 
 import InputText from "primevue/inputtext";
-// import Button from "primevue/button";
+
 import "primevue/resources/themes/saga-blue/theme.css";
 import "primevue/resources/primevue.min.css";
 import "primeicons/primeicons.css";
@@ -60,8 +60,7 @@ import "primeicons/primeicons.css";
 export default {
   components: {
     InputText,
-    
-    // Button 
+   
   },
   data() {
     return {
@@ -139,14 +138,13 @@ export default {
 }
 
 .button-wrapper button:hover {
-  /* background: #048bfa;
-  color: #048bfa; */
+
   letter-spacing: 0.25em;
-  /* box-shadow: 0 0 15px #048bfa; */
+ 
 }
 
 .button-wrapper button:hover .pi-plus {
-  /* color: #048bfa; */
+
   letter-spacing: 0.25em;
   transition: 0.5s;
 } 

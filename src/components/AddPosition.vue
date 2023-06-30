@@ -144,13 +144,7 @@ export default {
     removePosition(index) {
     this.$emit("remove-position", index);
   },
-    // openModal() {
-    //   if (!this.isNameValid || !this.isPriceValid || !this.isPeopleSelected) {
-    //     this.showModal = true;
-    //   } else {
-    //     this.addPosition();
-    //   }
-    // },
+
     closeModal() {
       this.showModal = false;
     },
@@ -299,10 +293,10 @@ export default {
 }
 
 .button-wrapper button:hover {
-  /* background: #048bfa;
-  color: #048bfa; */
+
+
   letter-spacing: 0.25em;
-  /* box-shadow: 0 0 15px #048bfa; */
+
 }
 
 .button-wrapper button:hover .pi-plus {

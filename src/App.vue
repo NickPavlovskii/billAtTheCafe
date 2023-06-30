@@ -486,7 +486,7 @@ span {
   font-weight: 700;
   text-align: center;
   color: #333;
-  /* Дополнительные стили, если необходимо */
+
 }
 
 
@@ -499,7 +499,7 @@ span {
   transform: translate(-50%, -50%);
   
   background-color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Горизонтальное смещение, вертикальное смещение, размытие, цвет тени */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
 
   
  padding: 30px;

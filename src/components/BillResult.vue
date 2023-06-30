@@ -47,12 +47,12 @@
 </template>
 
 <script>
-// import InputNumber from 'primevue/inputnumber';
+
 import BillList from './BillList.vue';
 
 export default {
   components: {
-    // InputNumber,
+   
     BillList,
   },
   props: {
@@ -206,7 +206,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999; /* Убедитесь, что z-index достаточно большой, чтобы модальное окно было видимым над другими элементами */
+  z-index: 9999;
 }
 
 .modal-content {
@@ -234,8 +234,8 @@ export default {
 }
 
 .p-inputtext {
-  width: 150px; /* Измените значение, чтобы установить желаемую ширину */
-  border-radius: 10px; /* Измените значение, чтобы установить желаемую закругленность */
+  width: 150px; 
+  border-radius: 10px; 
 }
 .btnn {
   margin-top: 30px;
@@ -457,125 +457,3 @@ export default {
 
 </style>
 
-
-<!-- 
-
-<template>
-  <div class="result">
-    <h2>Result</h2>
-    <div class="table-container">
-      <DataTable :value="people" class="fixed-table">
-        <Column field="name" header="Name"></Column>
-        <Column :field="formatCostColumn" header="Cost"></Column>
-        <Column field="id" header="Paid" class="paid-column">
-
-          <InputNumber type="number" v-model="personPaid[person.id]" />
-         
-        </Column>
-      </DataTable>
-    </div>
-    <div class="tips">
-      Tips: <span class="tip-amount">{{ calculateTips() }} руб.</span>
-    </div>
-  </div>
-</template>
-
-<script>
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
-import InputNumber from 'primevue/inputnumber';
-
-export default {
-  components: {
-    DataTable,
-    Column,
-    InputNumber
-  },
-  props: {
-    positions: {
-      type: Array,
-      required: true
-    },
-    people: {
-      type: Array,
-      required: true
-    }
-  },
-  computed: {
-    personCosts() {
-      const costs = {};
-
-      for (const person of this.people) {
-        let totalCost = 0;
-        for (const position of this.positions) {
-          if (position.people.includes(person)) {
-            totalCost += position.price / Math.round(position.people.length);
-          }
-        }
-        costs[person.id] = totalCost;
-      }
-
-      return costs;
-    }
-  },
-  data() {
-    return {
-      personPaid: {}
-    };
-  },
-  methods: {
-    done() {
-      // Emit event with personPaid data
-      this.$emit('done', this.personPaid);
-    },
-    formatCostColumn(rowData) {
-      const cost = this.personCosts[rowData.id];
-      return `${cost} руб.`;
-    },
-    
-  }
-};
-</script>
-
-<style scoped>
-.result {
-  text-align: center;
-}
-
-.result h2 {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-
-.table-container {
-  width: 100%;
-  overflow-x: auto;
-}
-
-.fixed-table {
-  min-width: 300px;
-  width: max-content;
-}
-
-.result input[type="number"] {
-  width: 80px;
-}
-
-.tips {
-  margin-top: 20px;
-  font-weight: bold;
-}
-
-.tip-amount {
-  color: #ff7043;
-}
-
-.paid-column {
-  width: 120px;
-}
-
-.paid-input {
-  width: 100px;
-}
-</style> -->

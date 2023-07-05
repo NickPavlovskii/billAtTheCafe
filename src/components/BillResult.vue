@@ -12,14 +12,14 @@
         </thead>
         <tbody>
           <tr v-for="(person, index) in people" :key="index">
-    <td>{{ person.name }}</td>
-    <td class="cost-column">{{ personCosts[person.id].toFixed(2) }} руб.</td>
-    <td>
-      <div class="col-12 mb-2 lg:col-4 lg:mb-0">
-        <input class="p-inputtext p-component" v-model="personPaid[person.id]" />
-      </div>
-    </td>
-  </tr>
+            <td>{{ person.name }}</td>
+            <td class="cost-column">{{ personCosts[person.id].toFixed(2) }} руб.</td>
+            <td>
+              <div class="col-12 mb-2 lg:col-4 lg:mb-0">
+                <input class="p-inputtext p-component" v-model="personPaid[person.id]" />
+              </div>
+            </td>
+          </tr>
         </tbody>
       </table>
       <div class="tips">
@@ -30,52 +30,41 @@
         <i class="i"></i>
       </button>
 
-<!-- Модальное окно -->
-<div v-if="showModal" class="modal">
-    <div class="modal-content">
-      <h3>Вы еще должны {{ (totalCost - totalPaid).toFixed(2) }} руб.</h3>
-      <p>Пожалуйста, введите достаточную сумму, чтобы покрыть все расходы.</p>
-      <button @click="showModal = false">Закрыть</button>
-    </div>
-  </div>
+      <!-- Модальное окно -->
+      <div v-if="showModal" class="modal">
+        <div class="modal-content">
+          <h3>Вы еще должны {{ (totalCost - totalPaid).toFixed(2) }} руб.</h3>
+          <p>Пожалуйста, введите достаточную сумму, чтобы покрыть все расходы.</p>
+          <button @click="showModal = false">Закрыть</button>
+        </div>
+      </div>
 
     </div>
     <div v-else>
-      <BillList :debts="debts" />
-    </div>
+  <bill-list :currentTab="currentTab" :debts="debts"></bill-list>
+</div>
   </div>
 </template>
 
 <script>
-
-import BillList from './BillList.vue';
-
+import { mapState, mapMutations } from 'vuex';
+import BillList from "./BillList.vue";
 export default {
-  components: {
-   
-    BillList,
-  },
-  props: {
-    positions: {
-      type: Array,
-      required: true,
-    },
-    people: {
-      type: Array,
-      required: true,
-    },
+  components:{ 
+    BillList
   },
   computed: {
+    ...mapState(['people', 'positions']),
     // Calculate the total cost of all positions
     totalCost() {
-    return Object.values(this.personCosts).reduce((sum, cost) => sum + cost, 0);
-  },
- // Calculate the total amount paid by all people
-  totalPaid() {
-    return Object.values(this.personPaid).reduce((sum, paid) => sum + parseFloat(paid || 0), 0);
-  },
-  // Calculate the total cost per person
-  personCosts() {
+      return Object.values(this.personCosts).reduce((sum, cost) => sum + cost, 0);
+    },
+    // Calculate the total amount paid by all people
+    totalPaid() {
+      return Object.values(this.personPaid).reduce((sum, paid) => sum + parseFloat(paid || 0), 0);
+    },
+    // Calculate the total cost per person
+    personCosts() {
       const costs = {};
 
       for (const person of this.people) {
@@ -90,23 +79,40 @@ export default {
 
       return costs;
     },
-        // Calculate the debts between people
+    // Calculate the debts between people
     debts() {
       return this.calculateDebts();
     },
   },
   data() {
     return {
+      currentTab: 'who-owes',
       personPaid: {}, // Object to store the amount paid by each person
       currentScreen: 'result',
       showModal: false,
     };
   },
+ 
+ 
   methods: {
+    ...mapMutations(['setCurrentScreen', 'setShowModal']),
+    changeTab(tab) {
+      this.currentTab = tab;
+    },
+    setCurrentScreen(screen) {
+    this.currentScreen = screen;
+  },
+    changeScreen(screen) {
+  this.setCurrentScreen(screen);
+},
+
+
          // Show the modal if there are outstanding debts
-    showModalIfDebtExists() {
+         showModalIfDebtExists() {
     if (this.totalCost > this.totalPaid) {
       this.showModal = true;
+    } else {
+      this.changeScreen('bill-list');
     }
   },
     done() {
@@ -365,50 +371,8 @@ export default {
   margin-top: 20px;
 }
 
-.bill-owe {
-  margin-top: 40px;
-}
-
-.bill-tabs {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 10px;
-}
-
-.bill-tabs button {
-  margin-right: 10px;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 4px;
-  background-color: #f2f2f2;
-  cursor: pointer;
-}
-
-.bill-tabs button.active {
-  background-color: #ddd;
-}
-
-.bill-list {
-  margin-top: 10px;
-}
-
-.bill-list h3 {
-  font-size: 18px;
-  margin-bottom: 10px;
-}
-
-.bill-list ul {
-  list-style-type: none;
-  padding-left: 0;
-}
-
-.bill-list li {
-  margin-bottom: 5px;
-}
-</style>
 
 
-<style scoped>
 .result {
   text-align: center;
 }

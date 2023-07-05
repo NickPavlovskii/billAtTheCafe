@@ -4,7 +4,6 @@
     <form @submit.prevent="addPerson">
       <label>
         <div class="p-inputgroup flex-">
-  
           <span class="p-inputgroup-addon">
             <i :class="['pi pi-user', { 'input-group-user': isInputActive }]"></i>
           </span>
@@ -13,17 +12,13 @@
         </div>
       </label>
       <div class="button-wrapper">
-     
- <!-- Кнопка добавления персоны -->
+        <!-- Кнопка добавления персоны -->
         <button type="submit" class="p-mt-3 add-button_1">
-        
           <span class="button-icon-wrapper">
             <i class="pi pi-plus"></i>
           </span>
           <span class="dob"> Добавить</span>
-         <i class="i"></i>
         </button>
-       
       </div>
       <!-- Текст, отображаемый при отсутствии добавленных персон -->
       <div v-if="people.length === 0" class="add-someone-text">
@@ -34,25 +29,22 @@
     <div class="Added_persons" v-if="people.length > 0">
       <h3>Добавленные персоны:</h3>
       <div class="person-list-wrapper">
-      <ul class="person-list">
-        <li v-for="person in people" :key="person.id" class="person-item">
-          <!-- Аватар персоны с первой буквой имени -->
-         
-          <div class="avatar">{{ person.name[0] }}</div>
-          <span class="person-name">{{ person.name }}</span>
-         
-          <i class="pi pi-times person-delete-icon" @click="deletePerson(person)"></i>
-        </li>
-      </ul>
-</div>
+        <ul class="person-list">
+          <li v-for="person in people" :key="person.id" class="person-item">
+            <!-- Аватар персоны с первой буквой имени -->
+            <div class="avatar">{{ person.name[0] }}</div>
+            <span class="person-name">{{ person.name }}</span>
+            <i class="pi pi-times person-delete-icon" @click="deletePerson(person)"></i>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-
+import { mapState, mapMutations } from 'vuex';
 import InputText from "primevue/inputtext";
-
 import "primevue/resources/themes/saga-blue/theme.css";
 import "primevue/resources/primevue.min.css";
 import "primeicons/primeicons.css";
@@ -60,7 +52,6 @@ import "primeicons/primeicons.css";
 export default {
   components: {
     InputText,
-   
   },
   data() {
     return {
@@ -70,18 +61,19 @@ export default {
       isInputActive: false,
     };
   },
-  props: {
-    people: {
-      type: Array,
-      required: true,
-    },
-  },
   methods: {
+    ...mapMutations(['addPerson']),
     // Обработчик удаления персоны
     deletePerson(person) {
-      this.$emit("delete-person", person);
-    },
-     // Обработчик добавления персоны
+
+  const index = this.people.findIndex((p) => p.id === person.id);
+
+  
+  if (index !== -1) {
+    this.$store.commit('deletePerson', person); // Call the mutation using $store.commit
+  }
+},
+    // Обработчик добавления персоны
     addPerson() {
       if (this.newPerson.name.trim()) {
         const newPersonObject = {
@@ -89,15 +81,22 @@ export default {
           name: this.newPerson.name.trim(),
         };
 
-        // Добавление новой персоны и очистка поля ввода
-        this.$emit("add-people", [...this.people, newPersonObject]);
+        // Call the mutation using $store.commit
+        this.$store.commit('addPerson', newPersonObject);
 
         this.newPerson.name = "";
       }
     },
   },
+  computed: {
+    ...mapState({
+      people: (state) => state.people,
+    }),
+  },
 };
 </script>
+
+
 
 <style scoped>
 

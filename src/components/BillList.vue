@@ -54,6 +54,7 @@
 
 <script>
 export default {
+  
   props: {
     debts: {
       type: Object,
@@ -74,7 +75,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style >
 .Nikname {
   color: #048bfa;
   font-weight: bold;
@@ -133,6 +134,7 @@ export default {
   border: 1px solid #ccc;
   overflow-y: auto;
   max-height: 200px;
+  color: #27282c;
 }
 
 .bill-list h3 {

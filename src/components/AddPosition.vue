@@ -1,24 +1,43 @@
 <template>
-  <div >
+  <div>
     <h2 class="title">Добавление позиции</h2>
 
     <form @submit.prevent="addPosition" class="position-form">
       <div class="form-group">
         <div class="p-inputgroup flex-1">
-          <span class="p-inputgroup-addon">  <Icon icon="fluent:food-24-filled" width="32" height="32" /> </span>
-           <!-- Поле ввода названия позиции -->
-          <InputText type="text" id="name" v-model="name" placeholder="Название" class="input-field" />
+          <span class="p-inputgroup-addon">
+            <Icon icon="fluent:food-24-filled" width="32" height="32" />
+          </span>
+          <!-- Поле ввода названия позиции -->
+          <InputText
+            type="text"
+            id="name"
+            v-model="name"
+            placeholder="Название"
+            class="input-field"
+          />
         </div>
       </div>
       <div class="p-inputgroup flex-1">
-        <span class="p-inputgroup-addon"><Icon icon="ph:currency-rub-bold" width="32" height="32" /></span>
+        <span class="p-inputgroup-addon">
+          <Icon icon="ph:currency-rub-bold" width="32" height="32" />
+        </span>
         <!-- Поле ввода стоимости позиции -->
-        <InputNumber id="price" v-model="price" placeholder="Стоимость" class="input-field" />
+        <InputNumber
+          id="price"
+          v-model="price"
+          placeholder="Стоимость"
+          class="input-field"
+        />
       </div>
-      <div class="form-group "  >
+      <div class="form-group">
         <div class="avatars-container">
           <!-- Аватары для выбора людей, которые ели -->
-          <div class="avatar" @click="selectAllPeople" :class="{ active: allPeopleSelected }">
+          <div
+            class="avatar"
+            @click="selectAllPeople"
+            :class="{ active: allPeopleSelected }"
+          >
             Все
           </div>
           <div
@@ -28,36 +47,36 @@
             :key="personIndex"
             @click="toggleAvatarCheck(person)"
           >
-            <span class="avatar-text" :class="{ 'avatar-text-active': person.checked }">{{ person.name[0] }}</span>
+            <span class="avatar-text" :class="{ 'avatar-text-active': person.checked }">
+              {{ person.name[0] }}
+            </span>
             <input type="checkbox" v-model="person.checked" class="avatar-checkbox" />
           </div>
         </div>
       </div>
       <div class="button-wrapper">
-        <button @click="openModal" class="p-mt-3 add-button_1" >
-    <span class="dob">Добавить позицию</span>
-    <span class="button-icon-wrapper">
-      <i class="pi pi-check"></i>
-    </span>
-    <i class="i"></i>
-  </button>
-     <!-- Модальное окно для ошибок -->
-   <div v-if="showModal" class="modal-overlay" @click="closeModal">
-    <div class="modal-content">
-      <h3 v-if="!isNameValid">Напишите название</h3>
-      <h3 v-else-if="!isPriceValid">Бесплатно?</h3>
-      <h3 v-else-if="!isPeopleSelected">Выберите, кто ел</h3>
-      <button @click="closeModal" class="p-button ok-button">Ок</button>
-    </div>
-  </div>
-      
+        <button @click="openModal" class="p-mt-3 add-button_1">
+          <span class="dob">Добавить позицию</span>
+          <span class="button-icon-wrapper">
+            <i class="pi pi-check"></i>
+          </span>
+          <i class="i"></i>
+        </button>
+      </div>
+      <!-- Модальное окно для ошибок -->
+      <div v-if="showModal" class="modal-overlay" @click="closeModal">
+        <div class="modal-content">
+          <h3 v-if="!isNameValid">Напишите название</h3>
+          <h3 v-else-if="!isPriceValid">Бесплатно?</h3>
+          <h3 v-else-if="!isPeopleSelected">Выберите, кто ел</h3>
+          <button @click="closeModal" class="p-button ok-button">Ок</button>
+        </div>
       </div>
     </form>
 
     <h3 class="title">Список позиций:</h3>
     <ul class="position-list">
       <li v-for="(position, index) in positions" :key="index" class="position-item">
-
         <div class="position-info">
           <span class="position-name">{{ position.name }}</span>
           <span class="position-price">{{ position.price }} руб.</span>
@@ -73,7 +92,8 @@
             </div>
           </div>
         </div>
-        <button @click="removePosition(index)" class="remove-button">  <!-- Кнопка удаления позиции -->
+        <button @click="handleRemovePosition(index)" class="remove-button">
+          <!-- Кнопка удаления позиции -->
           <i class="pi pi-trash"></i>
         </button>
       </li>
@@ -81,49 +101,45 @@
     <!-- Промежуточный итог -->
     <div class="interim-total">
       <h3>Промежуточный итог:</h3>
-      <p class="itog">
-        {{ calculateTotal() }} руб. (+ {{ calculateTip() }} руб. чаевых)
-      </p>
+      <p class="itog">{{ calculateTotal() }} руб. (+ {{ calculateTip() }} руб. чаевых)</p>
     </div>
-
-
   </div>
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex';
 import InputNumber from 'primevue/inputnumber';
-import InputText from "primevue/inputtext";
-import "primevue/resources/themes/saga-blue/theme.css";
-import "primevue/resources/primevue.min.css";
-import "primeicons/primeicons.css";
+import InputText from 'primevue/inputtext';
+import 'primevue/resources/themes/saga-blue/theme.css';
+import 'primevue/resources/primevue.min.css';
+import 'primeicons/primeicons.css';
 import { Icon } from '@iconify/vue';
+
 export default {
   components: {
     InputText,
     InputNumber,
-    Icon 
-  },
-  props: {
-    positions: {
-      type: Array,
-      required: true
-    },
-    people: {
-      type: Array,
-      required: true,
-    },
+    Icon,
   },
   computed: {
+    ...mapState(['people', 'positions', 'showModal']),
+    
+    // Проверка валидности имени
     isNameValid() {
       return this.name.trim().length > 0;
     },
+    
+    // Проверка валидности цены
     isPriceValid() {
       return this.price !== null;
     },
+    
+    // Проверка выбранности хотя бы одного участника
     isPeopleSelected() {
       return this.people.some(person => person.checked);
     },
-   
+    
+    // Проверка валидности позиции (имени, цены и выбора участников)
     isPositionValid() {
       return (
         this.name.trim().length > 0 &&
@@ -134,83 +150,102 @@ export default {
   },
   data() {
     return {
-      name: "",
-      price: null,
-      allPeopleSelected: false,
-      showModal: false,
+      name: '', // Имя позиции
+      price: null, // Цена позиции
+      allPeopleSelected: false, // Флаг выбора всех участников
     };
   },
   methods: {
-    removePosition(index) {
-    this.$emit("remove-position", index);
-  },
-
-    closeModal() {
-      this.showModal = false;
+    ...mapMutations(['setShowModal', 'removePosition']),
+    
+    // Обработчик удаления позиции
+    handleRemovePosition(index) {
+      this.removePosition(index);
     },
+    
+    // Закрыть модальное окно
+    closeModal() {
+      this.setShowModal(false);
+    },
+    
+    // Добавление позиции
     addPosition() {
-  if (!this.isNameValid || !this.isPriceValid || !this.isPeopleSelected) {
-    this.showModal = true;
-    return; // Не выполнять добавление позиции, если не все поля заполнены
-  }
+      if (!this.isNameValid || !this.isPriceValid || !this.isPeopleSelected) {
+        this.setShowModal(true);
+        return; // Не выполнять добавление позиции, если не все поля заполнены
+      }
 
-  const position = {
-    name: this.name,
-    price: Number(this.price),
-    people: this.people.filter((person) => person.checked),
-  };
+      const position = {
+        name: this.name,
+        price: Number(this.price),
+        people: this.people.filter(person => person.checked),
+      };
 
-  this.$emit("add-position", position);
+      this.$emit('add-position', position);
 
-  // Сбросить значения полей ввода
-  this.name = "";
-  this.price = null;
+      // Сбросить значения полей ввода
+      this.name = '';
+      this.price = null;
 
-  // Сбросить состояние выбора людей
-  this.resetPeopleChecked();
-},
-
-  
+      // Сбросить состояние выбора людей
+      this.resetPeopleChecked();
+    },
+    
+    // Вычисление общей суммы
     calculateTotal() {
       let total = 0;
-      this.positions.forEach((position) => {
+      this.positions.forEach(position => {
         total += position.price;
       });
       return total;
     },
+    
+    // Вычисление чаевых
     calculateTip() {
-      const tipPercentage = 0.1; // 10% tip
+      const tipPercentage = 0.1; // 10% чаевых
       const total = this.calculateTotal();
       const tip = total * tipPercentage;
-      return tip.toFixed(2); // Round to 2 decimal places
+      return tip.toFixed(2); // Округление до 2 десятичных знаков
     },
+    
+    // Переключение выбора аватара участника
     toggleAvatarCheck(person) {
       person.checked = !person.checked;
       this.updateAllPeopleSelected();
     },
+    
+    // Сброс выбора всех участников
+
     resetPeopleChecked() {
-      this.people.forEach((person) => {
+      this.people.forEach(person => {
         person.checked = false;
       });
       this.allPeopleSelected = false;
     },
+    
+    // Выбрать всех участников
     selectAllPeople() {
       this.allPeopleSelected = !this.allPeopleSelected;
-      this.people.forEach((person) => {
+      this.people.forEach(person => {
         person.checked = this.allPeopleSelected;
       });
     },
+    
+    // Обновить состояние выбора всех участников
     updateAllPeopleSelected() {
-      const selectedPeopleCount = this.people.filter((person) => person.checked).length;
+      const selectedPeopleCount = this.people.filter(person => person.checked).length;
       this.allPeopleSelected = selectedPeopleCount === this.people.length;
     },
+    
+    // Получить цвет аватара по индексу
     getAvatarColor(index) {
-      const colors = ["#048bfa", "#ff6b6b", "#67d17e", "#f4b942", "#7c49b3"];
+      const colors = ['#048bfa', '#ff6b6b', '#67d17e', '#f4b942', '#7c49b3'];
       return colors[index % colors.length];
     },
   },
 };
 </script>
+
 
 
 <style scoped>

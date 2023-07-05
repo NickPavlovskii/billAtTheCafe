@@ -1,42 +1,49 @@
 <template>
-  <div class="main-component">
-    <h1>Добро пожаловать в Cafe Bill Splitter</h1>
+ <div  style="height: 300px; z-index: 2;">
+      <h1>Добро пожаловать в Cafe Bill Splitter</h1>
+      <div class="btns">
+           <!-- Button to navigate to adding persons screen -->
     
-    <button class="instruction-button" @click="showInstructions"><Icon icon="fluent-mdl2:hint-text" /></button>
 
-    <div v-if="showModal" class="modal">
-      <div class="modal-content">
-        <h2>Инструкции</h2>
-        <ol>
-          <li>Шаг 1: Добавьте участников счета, нажав кнопку "Добавить участников".</li>
-          <li>Шаг 2: Добавьте позиции счета, указав название и цену для каждой позиции.</li>
-          <li>Шаг 3: Проверьте результаты разделения счета на вкладке "Результат".</li>
-        </ol>
-        <p>Вы также можете удалить участника или позицию, кликнув на соответствующую кнопку.</p>
-        <button @click="closeModal">Закрыть</button>
-      </div>
-    </div>
   </div>
+  <!-- Modal for main instructions -->
+    
+       <!-- Background image -->
+    <img src="cofe.png" class="background-image" />
+    </div>
 </template>
 
 <script>
+
 export default {
+  components: {
+   
+ 
+  
+
+  },
   data() {
     return {
       showModal: false,
       currentScreen: '', // Add the currentScreen variable here
+      showModalMain: false, // Flag to control the visibility of the main modal
     };
   },
   methods: {
+    goToNextScreen(nextScreen) {
+        this.$router.push(nextScreen);
+      },
     navigateToPersons() {
     this.currentScreen = 'add-persons';
   },
 
+    // Method to show the instructions modal
     showInstructions() {
-      this.showModal = true;
+      this.showModalMain = true;
     },
+     // Method to close the instructions modal
     closeModal() {
-      this.showModal = false;
+      this.showModalMain = false;
     },
   },
 };
@@ -44,6 +51,34 @@ export default {
 
 
 <style scoped>
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  text-align: center;
+  border: 4px solid #27282c;
+}
+
+.instruction-button {
+  background-color: #27282c;
+  margin-left: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+
+  color: #333;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 5;
+}
+
+  .background-image {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200px;
+  height: 200px;
+  z-index: -1;
+}
 .MainComponent {
   display: flex;
   flex-direction: column;
@@ -72,6 +107,28 @@ export default {
   border-radius: 5px;
   cursor: pointer;
 }
+.btns{
+  margin-top: 120px;
+ }
+  .MainComponent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.start-button {
+  padding: 10px 20px;
+  font-size: 18px;
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
 
 .modal {
   position: fixed;
@@ -85,11 +142,6 @@ export default {
   justify-content: center;
 }
 
-.modal-content {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 5px;
-}
 
 button {
   padding: 10px 20px;

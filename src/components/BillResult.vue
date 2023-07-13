@@ -30,27 +30,27 @@
         <i class="i"></i>
       </button>
 
-      <!-- Модальное окно -->
-      <div v-if="showModal" class="modal">
-        <div class="modal-content">
-          <h3>Вы еще должны {{ (totalCost - totalPaid).toFixed(2) }} руб.</h3>
-          <p>Пожалуйста, введите достаточную сумму, чтобы покрыть все расходы.</p>
-          <button @click="showModal = false">Закрыть</button>
-        </div>
-      </div>
-
+      <!-- PrimeVue Dialog -->
+      <Dialog v-model:visible="showModal" modal>
+        <h3>Вы еще должны {{ (totalCost - totalPaid).toFixed(2) }} руб.</h3>
+        <p>Пожалуйста, введите достаточную сумму, чтобы покрыть все расходы.</p>
+        <button @click="showModal = false">Закрыть</button>
+      </Dialog>
     </div>
     <div v-else>
-  <bill-list :currentTab="currentTab" :debts="debts"></bill-list>
-</div>
+      <bill-list :currentTab="currentTab" :debts="debts"></bill-list>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapState, mapMutations } from 'vuex';
+import Dialog from 'primevue/dialog';
 import BillList from "./BillList.vue";
+
 export default {
-  components:{ 
+  components: {
+    Dialog,
     BillList
   },
   computed: {

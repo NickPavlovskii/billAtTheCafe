@@ -76,13 +76,7 @@ export default {
     // Обработчик удаления персоны
 
       // Метод для открытия модального окна с позициями или перехода на следующий экран
-      openPositionModal() {
-      if (this.positions.length < 2) {
-        this.showPositionModal = true;
-      } else {
-        this.$router.push('/add-positions');
-      }
-    },
+    
 
     // Метод для закрытия модального окна с позициями
     closeModal() {

@@ -104,7 +104,7 @@
       <p class="itog">{{ calculateTotal() }} руб. (+ {{ calculateTip() }} руб. чаевых)</p>
     </div>
   </div>
-  <button @click="openPositionModal('bill-result')" class="p-mt-3 add-button addbtn btnn">
+  <button @click="openPositionModal" class="p-mt-3 add-button addbtn btnn">
         <span>Результат<i class="pi pi-chevron-right"></i></span>
         <i class="i"></i>
       </button>
@@ -114,6 +114,7 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex';
+import ModalPosition from './Modal/ModalPosition.vue';
 import InputNumber from 'primevue/inputnumber';
 import InputText from 'primevue/inputtext';
 import 'primevue/resources/themes/saga-blue/theme.css';
@@ -126,6 +127,15 @@ export default {
     InputText,
     InputNumber,
     Icon,
+    ModalPosition
+  },
+  data() {
+    return {
+      showPositionModal: false,
+      name: '', // Имя позиции
+      price: null, // Цена позиции
+      allPeopleSelected: false, // Флаг выбора всех участников
+    };
   },
   computed: {
     
@@ -155,16 +165,19 @@ export default {
       );
     },
   },
-  data() {
-    return {
-      name: '', // Имя позиции
-      price: null, // Цена позиции
-      allPeopleSelected: false, // Флаг выбора всех участников
-    };
-  },
+
   methods: {
     ...mapMutations(['setShowModal', 'removePosition']),
-    
+    openPositionModal() {
+      if (this.positions.length < 2) {
+        this.showPositionModal = true;
+      } else {
+        this.$router.push('/bill-result');
+      }
+    },
+    closePositionModal() {
+      this.showPositionModal = false;
+    },
     // Обработчик удаления позиции
     handleRemovePosition(index) {
       this.removePosition(index);

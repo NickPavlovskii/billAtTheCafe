@@ -1,5 +1,5 @@
 <template>
-  <div class="add-person-container">
+  <div class="add-person-container add-person">
     <h2>Добавить человека</h2>
     <form @submit.prevent="addPerson">
       <label>
@@ -39,7 +39,14 @@
         </ul>
       </div>
     </div>
+   
   </div>
+  <button @click="goToNextScreen" class="p-mt-3  addbtn result-button">
+          <span class="button-text">Далее<i class="pi pi-chevron-right"></i></span>
+          <i class="i"></i>
+        </button>
+        <ModalPeople v-if="showModal" :people="people" @close="closeModal" />
+
 </template>
 
 <script>
@@ -48,13 +55,16 @@ import InputText from "primevue/inputtext";
 import "primevue/resources/themes/saga-blue/theme.css";
 import "primevue/resources/primevue.min.css";
 import "primeicons/primeicons.css";
-
+import ModalPeople from './Modal/ModalPeople.vue';
 export default {
   components: {
     InputText,
+    
+    ModalPeople
   },
   data() {
     return {
+      showModal: false,
       newPerson: {
         name: "",
       },
@@ -64,6 +74,28 @@ export default {
   methods: {
     ...mapMutations(['addPerson']),
     // Обработчик удаления персоны
+
+      // Метод для открытия модального окна с позициями или перехода на следующий экран
+      openPositionModal() {
+      if (this.positions.length < 2) {
+        this.showPositionModal = true;
+      } else {
+        this.$router.push('/add-positions');
+      }
+    },
+
+    // Метод для закрытия модального окна с позициями
+    closeModal() {
+      this.showModal = false;
+    },
+    // Метод для перехода на следующий экран
+    goToNextScreen() {
+      if (this.people.length >= 2) {
+        this.$router.push('/add-positions');
+      } else {
+        this.showModal = true;
+      }
+    },
     deletePerson(person) {
 
   const index = this.people.findIndex((p) => p.id === person.id);
@@ -98,7 +130,103 @@ export default {
 
 
 
-<style scoped>
+<style lang="scss" scoped>
+.result-button {
+    margin-top: 30px;
+    position: relative;
+    color: rgba(255, 255, 255, 0.616);
+    background: #444;
+    font-size: 1.0em;
+    letter-spacing: 0.1em;
+    font-weight: 400;
+    padding: 10px 30px;
+    transition: 0.5s;
+    text-decoration: none;
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+  
+  
+    &:hover {
+      color: #fff;
+      background: #048bfa;
+      letter-spacing: 0.25em;
+      transition: 0.5s;
+  
+      .i::before {
+        width: 6px;
+        left: calc(50% - 3px);
+        border: 2px solid #048bfa;
+        box-shadow: 70px 0 #fff, -70px 0 #048bfa, -70px 0 0 4px #27282c, 10px -10px #048bfa;
+      }
+  
+  
+      .i::after {
+        width: 6px;
+        left: calc(50% - 3px);
+        border: 2px solid #048bfa;
+        box-shadow: 70px 0 #fff;
+      }
+  
+      .button-text .pi-chevron-right {
+        color: #fff;
+        letter-spacing: 0.25em;
+        transition: 0.5s;
+      }
+    }
+  
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      background: #27282c;
+    }
+  
+  
+    .button-text {
+      position: relative;
+      z-index: 1;
+    }
+  
+    .i {
+      position: absolute;
+      inset: 0;
+      display: block;
+  
+  
+      &::before {
+        content: "";
+        position: absolute;
+        top: -3.5px;
+        left: 80%;
+        width: 10px;
+        height: 6px;
+        background: #27282c;
+        border: 2px solid #048bfa;
+        transform: translateX(-50%);
+        transition: 0.5s, box-shadow 0.5s;
+      }
+  
+  
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: -3.5px;
+        left: 20%;
+        width: 10px;
+        height: 6px;
+        background: #27282c;
+        border: 2px solid #048bfa;
+        transform: translateX(-50%);
+        transition: 0.5s, box-shadow 0.5s;
+      }
+  
+  
+  
+    }
+  
+  }
+
 
 .add-someone-text {
   position: relative;

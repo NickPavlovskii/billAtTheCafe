@@ -104,6 +104,12 @@
       <p class="itog">{{ calculateTotal() }} руб. (+ {{ calculateTip() }} руб. чаевых)</p>
     </div>
   </div>
+  <button @click="openPositionModal('bill-result')" class="p-mt-3 add-button addbtn btnn">
+        <span>Результат<i class="pi pi-chevron-right"></i></span>
+        <i class="i"></i>
+      </button>
+ 
+    <ModalPosition v-if="showPositionModal" @close="closePositionModal" />
 </template>
 
 <script>
@@ -122,6 +128,7 @@ export default {
     Icon,
   },
   computed: {
+    
     ...mapState(['people', 'positions', 'showModal']),
     
     // Проверка валидности имени
@@ -170,26 +177,24 @@ export default {
     
     // Добавление позиции
     addPosition() {
-      if (!this.isNameValid || !this.isPriceValid || !this.isPeopleSelected) {
-        this.setShowModal(true);
-        return; // Не выполнять добавление позиции, если не все поля заполнены
-      }
+  if (!this.isNameValid || !this.isPriceValid || !this.isPeopleSelected) {
+    this.setShowModal(true);
+    return;
+  }
 
-      const position = {
-        name: this.name,
-        price: Number(this.price),
-        people: this.people.filter(person => person.checked),
-      };
+  const position = {
+    name: this.name,
+    price: Number(this.price),
+    people: this.people.filter(person => person.checked),
+  };
 
-      this.$emit('add-position', position);
+  this.$store.commit('setPositions', [...this.positions, position]); // Commit the mutation to update the positions state
 
-      // Сбросить значения полей ввода
-      this.name = '';
-      this.price = null;
-
-      // Сбросить состояние выбора людей
-      this.resetPeopleChecked();
-    },
+  // Reset input values and people selection
+  this.name = '';
+  this.price = null;
+  this.resetPeopleChecked();
+},
     
     // Вычисление общей суммы
     calculateTotal() {
@@ -453,10 +458,7 @@ export default {
   color: white;
 }
 
-.avatar-text {
-  font-size: 18px;
-  color: #333;
-}
+
 
 .avatar-checkbox {
   display: none;

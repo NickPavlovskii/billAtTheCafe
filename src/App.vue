@@ -55,15 +55,10 @@
       <bill-result />
     </div>
     <div class="niklad-tag">@Niklad</div>
-
-   
-с
-
   </div>
 </template>
 
 <script>
-
 import { mapState, mapMutations } from 'vuex';
 import ModalMain from './components/Modal/ModalMain.vue';
 import ModalPeople from './components/Modal/ModalPeople.vue';
@@ -179,10 +174,6 @@ addPosition(newPosition) {
 
   <style lang="scss"  scoped>
 
-
- 
-
-
 .instruction-button {
   background-color: #27282c;
   margin-left: 10px;
@@ -196,9 +187,6 @@ addPosition(newPosition) {
   z-index: 5;
 }
 
-
-
-
 button {
   padding: 10px 20px;
   font-size: 16px;
@@ -211,18 +199,14 @@ button {
  
 
 
-
   .niklad-tag {
   position: absolute;
   bottom: 10px;
   right: 10px;
   padding: 0px 2px;
-
   font-size: 14px;
  
- 
 }
-
 
   .share-container{
     position: absolute;
@@ -230,13 +214,11 @@ button {
   right: 15px;
   }
   
-
 .app-icons{
   margin-left: 12px;
   position: relative;
   right: 130px;
   margin-top: 12px;
- 
 }
 
  .app-icon {
@@ -348,22 +330,6 @@ span {
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   @import url('https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap');
 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
@@ -377,25 +343,18 @@ span {
 
 }
 
-
-
  .cont {
   margin: auto;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
-
-  
  padding: 30px;
  border: 1px solid #ccc;
  max-width: 400px;
  text-align: center;
- 
- 
 
 }
  .add{

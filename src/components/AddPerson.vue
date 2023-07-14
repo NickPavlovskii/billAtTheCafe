@@ -119,7 +119,8 @@ export default {
     },
   },
   computed: {
-    ... mapState('people') //на самом деле обучающий проект хотел использовать разные способы тут
+    ...mapState([
+      'people']),
   },
 };
 </script>

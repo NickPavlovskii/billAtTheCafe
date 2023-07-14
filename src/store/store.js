@@ -31,9 +31,7 @@ export default createStore({
     currentScreen: 'main-component',
     people: [],
     positions: [],
-    showModal: false,
-    showPositionModal: false,
-    showModalMain: false,
+  
     personPaid: {}, 
   },
   mutations: {
@@ -46,15 +44,7 @@ export default createStore({
     setPositions(state, positions) {
       state.positions = positions;
     },
-    setShowModal(state, value) {
-      state.showModal = value;
-    },
-    setShowPositionModal(state, value) {
-      state.showPositionModal = value;
-    },
-    setShowModalMain(state, value) {
-      state.showModalMain = value;
-    },
+  
     addPerson(state, person) {
       state.people.push(person);
     },

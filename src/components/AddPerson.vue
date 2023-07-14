@@ -83,14 +83,15 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(['addPerson']),
+    ...mapMutations({
+      mutationAddPerson: 'addPerson',
+      mutationDeletePerson: 'deletePerson',
+    }),
 
-
-    // Метод для закрытия модального окна с позициями
     closeModal() {
       this.showModal = false;
     },
-    // Метод для перехода на следующий экран
+
     goToNextScreen() {
       if (this.people.length >= 2) {
         this.$router.push('/add-positions');
@@ -98,35 +99,27 @@ export default {
         this.showModal = true;
       }
     },
-    // Обработчик удаления персоны
+
     deletePerson(person) {
-
       const index = this.people.findIndex((p) => p.id === person.id);
-
-
       if (index !== -1) {
-        this.$store.commit('deletePerson', person); // Call the mutation using $store.commit
+        this.mutationDeletePerson(person); // Call the renamed mutation
       }
     },
-    // Обработчик добавления персоны
+
     addPerson() {
       if (this.newPerson.name.trim()) {
         const newPersonObject = {
           id: Date.now(),
           name: this.newPerson.name.trim(),
         };
-
-        // Call the mutation using $store.commit
-        this.$store.commit('addPerson', newPersonObject);
-
-        this.newPerson.name = "";
+        this.mutationAddPerson(newPersonObject); // Call the renamed mutation
+        this.newPerson.name = '';
       }
     },
   },
   computed: {
-    ...mapState({
-      people: (state) => state.people,
-    }),
+    ... mapState('people') //на самом деле обучающий проект хотел использовать разные способы тут
   },
 };
 </script>

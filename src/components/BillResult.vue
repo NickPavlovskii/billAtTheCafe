@@ -23,7 +23,7 @@
         </tbody>
       </table>
       <div class="tips">
-        Общие чаевые: <span class="tip-amount">{{ calculateTips() }} руб.</span>
+        Общие чаевые: <span class="tip-amount">{{ tipsAmount }} руб.</span>
       </div>
       <button @click="showModalIfDebtExists" class="p-mt-3 add-button addbtn btnn">
         <span>Кто кому должен</span>
@@ -31,16 +31,13 @@
       </button>
 
       <!-- PrimeVue Dialog -->
-     <!-- PrimeVue Dialog -->
-     <Dialog v-model:visible="showModal" modal :closable="false">
+      <Dialog v-model:visible="showModal" modal :closable="false">
         <div class="modal-content">
-        <h3>Вы еще должны {{ (totalCost - totalPaid).toFixed(2) }} руб.</h3>
-        <p>Пожалуйста, введите достаточную сумму, чтобы покрыть все расходы.</p>
-        <button @click="showModal = false" class="closebtn">Закрыть</button>
-      </div>
+          <h3>Вы еще должны {{ (totalCost - totalPaid).toFixed(2) }} руб.</h3>
+          <p>Пожалуйста, введите достаточную сумму, чтобы покрыть все расходы.</p>
+          <button @click="showModal = false" class="closebtn">Закрыть</button>
+        </div>
       </Dialog>
-      
-      
     </div>
     <div v-else>
       <bill-list :currentTab="currentTab" :debts="debts"></bill-list>
@@ -58,17 +55,25 @@ export default {
     Dialog,
     BillList
   },
+  data() {
+    return {
+      currentTab: 'who-owes',
+      personPaid: {},
+      currentScreen: 'result',
+      showModal: false,
+    };
+  },
   computed: {
-    ...mapState(['people', 'positions']),
-    // Calculate the total cost of all positions
+    ...mapState([
+      'people',
+      'positions'
+    ]),
     totalCost() {
       return Object.values(this.personCosts).reduce((sum, cost) => sum + cost, 0);
     },
-    // Calculate the total amount paid by all people
     totalPaid() {
       return Object.values(this.personPaid).reduce((sum, paid) => sum + parseFloat(paid || 0), 0);
     },
-    // Calculate the total cost per person
     personCosts() {
       const costs = {};
 
@@ -84,58 +89,14 @@ export default {
 
       return costs;
     },
-    // Calculate the debts between people
-    debts() {
-      return this.calculateDebts();
-    },
-  },
-  data() {
-    return {
-      currentTab: 'who-owes',
-      personPaid: {}, // Object to store the amount paid by each person
-      currentScreen: 'result',
-      showModal: false,
-    };
-  },
- 
- 
-  methods: {
-    ...mapMutations(['setCurrentScreen', 'setShowModal']),
-    changeTab(tab) {
-      this.currentTab = tab;
-    },
-    setCurrentScreen(screen) {
-    this.currentScreen = screen;
-  },
-    changeScreen(screen) {
-  this.setCurrentScreen(screen);
-},
-
-
-         // Show the modal if there are outstanding debts
-         showModalIfDebtExists() {
-    if (this.totalCost > this.totalPaid) {
-      this.showModal = true;
-    } 
- 
-    else {
-      this.changeScreen('bill-list');
-    }
-  },
-    done() {
-      // Emit event with personPaid data
-      this.$emit('done', this.personPaid);
-    },
- // Calculate the total tips based on the total amount paid
-    calculateTips() {
+    tipsAmount() {
       let totalPaid = 0;
       for (const personId in this.personPaid) {
         totalPaid += parseFloat(this.personPaid[personId]);
       }
       return totalPaid * 0.1; // Assuming 10% tips
     },
-// Calculate the debts between people
-    calculateDebts() {
+    debts() {
       const debts = {
         whoOwes: [],
         whoIsOwed: [],
@@ -146,7 +107,7 @@ export default {
         const paid = this.personPaid[person.id] || 0;
         let diff = paid - cost;
 
-        if (diff > 0) {  // If the person has paid more than their cost
+        if (diff > 0) {
           for (const otherPerson of this.people) {
             if (otherPerson !== person) {
               const otherPersonCost = this.personCosts[otherPerson.id];
@@ -168,7 +129,7 @@ export default {
               }
             }
           }
-        } else if (diff < 0) { // If the person has paid less than their cost
+        } else if (diff < 0) {
           for (const otherPerson of this.people) {
             if (otherPerson !== person) {
               const otherPersonCost = this.personCosts[otherPerson.id];
@@ -195,6 +156,25 @@ export default {
 
       return debts;
     },
+  },
+  methods: {
+    ...mapMutations([
+      'setCurrentScreen', 
+      'setShowModal'
+    ]),
+
+    changeTab(tab) {
+      this.currentTab = tab;
+    },
+
+    showModalIfDebtExists() {
+      if (this.totalCost > this.totalPaid) {
+        this.showModal = true;
+      } else {
+        this.changeScreen('bill-list');
+      }
+    },
+    
   },
 };
 </script>

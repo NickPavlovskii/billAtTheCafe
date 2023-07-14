@@ -60,7 +60,7 @@
 
     <h3 class="title">Список позиций:</h3>
     <ul class="position-list">
-      <li v-for="(position, index) in positions" :key="index" class="position-item">
+      <li v-for="(position, index) in positions" :key="'position-' + index" class="position-item">
         <div class="position-info">
           <span class="position-name">{{ position.name }}</span>
           <span class="position-price">{{ position.price }} руб.</span>
@@ -124,7 +124,11 @@ export default {
   },
   computed: {
 
-    ...mapState(['people', 'positions', 'showModal']),
+    ...mapState([
+      'people',
+      'positions',
+      'showModal'
+    ]),
 
     // Проверка валидности имени
     isNameValid() {
@@ -152,7 +156,11 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['setShowModal', 'removePosition']),
+    ...mapMutations([
+    'setShowModal', 
+    'removePosition', 
+    'setPositions'
+  ]),
     openPositionModal() {
       if (this.positions.length < 2) {
         this.showPositionModal = true;
@@ -174,11 +182,17 @@ export default {
     },
 
     // Добавление позиции
+
+    // Действительно Геттер isPositionValid уже содержит проверку валидности имени, 
+    // цены и выбора участников. 
+    // Поэтому можем  использовать его в условии if для определения, 
+    // является ли позиция действительной перед добавлением
+
     addPosition() {
-      if (!this.isNameValid || !this.isPriceValid || !this.isPeopleSelected) {
-        this.setShowModal(true);
-        return;
-      }
+  if (!this.isPositionValid) {
+    this.setShowModal(true);
+    return;
+  }
 
       const position = {
         name: this.name,
@@ -186,7 +200,7 @@ export default {
         people: this.people.filter(person => person.checked),
       };
 
-      this.$store.commit('setPositions', [...this.positions, position]); // Commit the mutation to update the positions state
+      this.setPositions([...this.positions, position]); // Commit the mutation to update the positions state
 
       // Reset input values and people selection
       this.name = '';
@@ -241,7 +255,14 @@ export default {
 
     // Получить цвет аватара по индексу
     getAvatarColor(index) {
-      const colors = ['#048bfa', '#ff6b6b', '#67d17e', '#f4b942', '#7c49b3'];
+      const colors = 
+      [
+        '#048bfa', 
+        '#ff6b6b',
+        '#67d17e', 
+        '#f4b942', 
+        '#7c49b3'
+      ];
       return colors[index % colors.length];
     },
   },

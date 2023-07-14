@@ -200,15 +200,9 @@ export default {
 </script>
 
 
-
-
-
-
-
-
 <style lang="scss" scoped>
 
-
+//------------- modal-content----------
 
   .modal-content {
     background-color: #fff;
@@ -329,7 +323,7 @@ export default {
     }
   }
 }
-
+//------------------result table----------
 .result {
   text-align: center;
 

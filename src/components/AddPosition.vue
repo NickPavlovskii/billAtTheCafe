@@ -449,9 +449,7 @@ export default {
   display: none;
 }
 
-.btn {
-  margin-top: 10px;
-}
+
 
 .position-list {
   list-style: none;

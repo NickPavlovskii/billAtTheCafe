@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import {  mapMutations } from 'vuex';
 
 import { Icon } from '@iconify/vue';
 import Dialog from 'primevue/dialog';
@@ -68,22 +68,7 @@ export default {
       this.showModalMain = false;
     },
   },
-  computed: {
 
-    ...mapState(['currentScreen', 'people', 'positions', 'showModal', 'showPositionModal', 'showModalMain']),
-    isNameValid() {
-
-      return this.people.every(person => person.name.trim() !== '');
-    },
-    isPriceValid() {
-
-      return this.positions.every(position => position.price > 0);
-    },
-    isPeopleSelected() {
-
-      return this.people.some(person => person.isSelected);
-    },
-  },
 };
 </script>
 

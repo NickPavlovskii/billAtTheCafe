@@ -28,7 +28,8 @@ export default {
     ...mapMutations(['setCurrentScreen', 'setPeople', 'setPositions', 'setShowModal', 'setShowPositionModal', 'setShowModalMain']),
 
     navigateToHome() {
-      this.setCurrentScreen('main-component');
+      this.$router.push('/');
+  
     },
   },
   computed: {

@@ -9,13 +9,7 @@
             <Icon icon="fluent:food-24-filled" width="32" height="32" />
           </span>
           <!-- Поле ввода названия позиции -->
-          <InputText
-            type="text"
-            id="name"
-            v-model="name"
-            placeholder="Название"
-            class="input-field"
-          />
+          <InputText type="text" id="name" v-model="name" placeholder="Название" class="input-field" />
         </div>
       </div>
       <div class="p-inputgroup flex-1">
@@ -23,30 +17,16 @@
           <Icon icon="ph:currency-rub-bold" width="32" height="32" />
         </span>
         <!-- Поле ввода стоимости позиции -->
-        <InputNumber
-          id="price"
-          v-model="price"
-          placeholder="Стоимость"
-          class="input-field"
-        />
+        <InputNumber id="price" v-model="price" placeholder="Стоимость" class="input-field" />
       </div>
       <div class="form-group">
         <div class="avatars-container">
           <!-- Аватары для выбора людей, которые ели -->
-          <div
-            class="avatar"
-            @click="selectAllPeople"
-            :class="{ active: allPeopleSelected }"
-          >
+          <div class="avatar" @click="selectAllPeople" :class="{ active: allPeopleSelected }">
             Все
           </div>
-          <div
-            class="avatar"
-            :class="{ active: person.checked }"
-            v-for="(person, personIndex) in people"
-            :key="personIndex"
-            @click="toggleAvatarCheck(person)"
-          >
+          <div class="avatar" :class="{ active: person.checked }" v-for="(person, personIndex) in people"
+            :key="personIndex" @click="toggleAvatarCheck(person)">
             <span class="avatar-text" :class="{ 'avatar-text-active': person.checked }">
               {{ person.name[0] }}
             </span>
@@ -64,14 +44,18 @@
         </button>
       </div>
       <!-- Модальное окно для ошибок -->
-      <div v-if="showModal" class="modal-overlay" @click="closeModal">
+     
+
+      <Dialog v-model:visible="showModal" modal :closable="false">
+
         <div class="modal-content">
           <h3 v-if="!isNameValid">Напишите название</h3>
           <h3 v-else-if="!isPriceValid">Бесплатно?</h3>
           <h3 v-else-if="!isPeopleSelected">Выберите, кто ел</h3>
           <button @click="closeModal" class="p-button ok-button">Ок</button>
         </div>
-      </div>
+</Dialog>
+
     </form>
 
     <h3 class="title">Список позиций:</h3>
@@ -81,13 +65,8 @@
           <span class="position-name">{{ position.name }}</span>
           <span class="position-price">{{ position.price }} руб.</span>
           <div class="avatars-container">
-            <div
-              class="avatar ava"
-              v-for="(person, personIndex) in position.people"
-              :key="personIndex"
-              :style="{ backgroundColor: getAvatarColor(personIndex) }"
-              :class="{ 'avatar-active': person.checked }"
-            >
+            <div class="avatar ava" v-for="(person, personIndex) in position.people" :key="personIndex"
+              :style="{ backgroundColor: getAvatarColor(personIndex) }" :class="{ 'avatar-active': person.checked }">
               <span class="avatar-text">{{ person.name[0] }}</span>
             </div>
           </div>
@@ -105,29 +84,35 @@
     </div>
   </div>
   <button @click="openPositionModal" class="p-mt-3 add-button addbtn btnn">
-        <span>Результат<i class="pi pi-chevron-right"></i></span>
-        <i class="i"></i>
-      </button>
- 
-    <ModalPosition v-if="showPositionModal" @close="closePositionModal" />
+    <span>Результат<i class="pi pi-chevron-right"></i></span>
+    <i class="i"></i>
+  </button>
+
+  
+  <Dialog v-model:visible="showPositionModal" modal :closable="false">
+
+    <div class="modal-content">
+      <h3>Должно быть добавлено как минимум 2 позиции</h3>
+      <button @click="closePositionModal" class="p-button">Ок</button>
+    </div>
+  </Dialog>
 </template>
 
 <script>
 import { mapState, mapMutations } from 'vuex';
-import ModalPosition from './Modal/ModalPosition.vue';
 import InputNumber from 'primevue/inputnumber';
 import InputText from 'primevue/inputtext';
 import 'primevue/resources/themes/saga-blue/theme.css';
 import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
 import { Icon } from '@iconify/vue';
-
+import Dialog from 'primevue/dialog';
 export default {
   components: {
     InputText,
     InputNumber,
     Icon,
-    ModalPosition
+    Dialog 
   },
   data() {
     return {
@@ -138,24 +123,24 @@ export default {
     };
   },
   computed: {
-    
+
     ...mapState(['people', 'positions', 'showModal']),
-    
+
     // Проверка валидности имени
     isNameValid() {
       return this.name.trim().length > 0;
     },
-    
+
     // Проверка валидности цены
     isPriceValid() {
       return this.price !== null;
     },
-    
+
     // Проверка выбранности хотя бы одного участника
     isPeopleSelected() {
       return this.people.some(person => person.checked);
     },
-    
+
     // Проверка валидности позиции (имени, цены и выбора участников)
     isPositionValid() {
       return (
@@ -182,33 +167,33 @@ export default {
     handleRemovePosition(index) {
       this.removePosition(index);
     },
-    
+
     // Закрыть модальное окно
     closeModal() {
       this.setShowModal(false);
     },
-    
+
     // Добавление позиции
     addPosition() {
-  if (!this.isNameValid || !this.isPriceValid || !this.isPeopleSelected) {
-    this.setShowModal(true);
-    return;
-  }
+      if (!this.isNameValid || !this.isPriceValid || !this.isPeopleSelected) {
+        this.setShowModal(true);
+        return;
+      }
 
-  const position = {
-    name: this.name,
-    price: Number(this.price),
-    people: this.people.filter(person => person.checked),
-  };
+      const position = {
+        name: this.name,
+        price: Number(this.price),
+        people: this.people.filter(person => person.checked),
+      };
 
-  this.$store.commit('setPositions', [...this.positions, position]); // Commit the mutation to update the positions state
+      this.$store.commit('setPositions', [...this.positions, position]); // Commit the mutation to update the positions state
 
-  // Reset input values and people selection
-  this.name = '';
-  this.price = null;
-  this.resetPeopleChecked();
-},
-    
+      // Reset input values and people selection
+      this.name = '';
+      this.price = null;
+      this.resetPeopleChecked();
+    },
+
     // Вычисление общей суммы
     calculateTotal() {
       let total = 0;
@@ -217,7 +202,7 @@ export default {
       });
       return total;
     },
-    
+
     // Вычисление чаевых
     calculateTip() {
       const tipPercentage = 0.1; // 10% чаевых
@@ -225,22 +210,21 @@ export default {
       const tip = total * tipPercentage;
       return tip.toFixed(2); // Округление до 2 десятичных знаков
     },
-    
+
     // Переключение выбора аватара участника
     toggleAvatarCheck(person) {
       person.checked = !person.checked;
       this.updateAllPeopleSelected();
     },
-    
-    // Сброс выбора всех участников
 
+    // Сброс выбора всех участников
     resetPeopleChecked() {
       this.people.forEach(person => {
         person.checked = false;
       });
       this.allPeopleSelected = false;
     },
-    
+
     // Выбрать всех участников
     selectAllPeople() {
       this.allPeopleSelected = !this.allPeopleSelected;
@@ -248,13 +232,13 @@ export default {
         person.checked = this.allPeopleSelected;
       });
     },
-    
+
     // Обновить состояние выбора всех участников
     updateAllPeopleSelected() {
       const selectedPeopleCount = this.people.filter(person => person.checked).length;
       this.allPeopleSelected = selectedPeopleCount === this.people.length;
     },
-    
+
     // Получить цвет аватара по индексу
     getAvatarColor(index) {
       const colors = ['#048bfa', '#ff6b6b', '#67d17e', '#f4b942', '#7c49b3'];
@@ -267,6 +251,16 @@ export default {
 
 
 <style scoped>
+.btnn {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 .ok-button {
   display: inline-block;
   padding: 0.5rem 1rem;
@@ -287,18 +281,7 @@ export default {
   background-color: #0056b3;
 }
 
-  .modal-overlay {
-    z-index: 999;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+
 
 .modal-content {
   background-color: #fff;
@@ -315,15 +298,19 @@ export default {
   margin-top: 20px;
   background: #27282c;
 }
-.add-button_1{
+
+.add-button_1 {
   margin-left: 15px;
 }
+
 .input-field {
   width: 100%;
 }
-.button-icon-wrapper{
+
+.button-icon-wrapper {
   padding-left: 4px;
 }
+
 .button-wrapper {
   display: flex;
   justify-content: center;
@@ -332,9 +319,9 @@ export default {
 
 .button-wrapper button {
 
-  position:relative;
+  position: relative;
   display: flex;
-  background-color:#27282c;
+  background-color: #27282c;
   color: #27282c;
   letter-spacing: 0.1em;
   font-weight: 400;
@@ -356,13 +343,13 @@ export default {
   /* color: #048bfa; */
   letter-spacing: 0.25em;
   transition: 0.5s;
-} 
+}
 
 .button-wrapper button::before {
   content: '';
   background: white;
   inset: 2px;
-  position:absolute;
+  position: absolute;
 }
 
 .button-wrapper button span {
@@ -411,16 +398,11 @@ export default {
 }
 
 
-
-
-
 .itog {
   font-size: 18px;
   margin-top: 10px;
 }
-.pi-cutlery{
-  color: #000;
-}
+
 
 .title {
   font-size: 24px;
@@ -435,16 +417,6 @@ export default {
 
 .form-group {
   margin-bottom: 10px;
-}
-
-
-
-
-.form-control {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 100%;
 }
 
 .avatars-container {
@@ -462,7 +434,7 @@ export default {
   background-color: #f2f2f2;
   cursor: pointer;
   margin-right: 8px;
-  
+
 }
 
 .avatar.active {
@@ -493,9 +465,6 @@ export default {
   margin-bottom: 10px;
 }
 
-.position-info {
-
-}
 
 .position-name {
   font-weight: bold;
@@ -519,9 +488,8 @@ export default {
   background-color: #048bfa;
   border: 2px solid white;
 }
-.position-info {
 
-}
+.position-info {}
 
 .position-name {
   font-weight: bold;

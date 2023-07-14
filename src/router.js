@@ -3,7 +3,7 @@ import MainComponent from './components/MainComponent.vue';
 import AddPersons from './components/AddPerson.vue';
 import AddPositions from './components/AddPosition.vue';
 import BillResult from './components/BillResult.vue';
-
+import BillList from "./components/BillList.vue";
 const routes = [
   {
     path: '/',
@@ -20,6 +20,10 @@ const routes = [
   {
     path: '/bill-result',
     component: BillResult,
+  },
+  {
+    path: '/billlist',
+    component: BillList,
   },
 ];
 

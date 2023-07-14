@@ -31,11 +31,16 @@
       </button>
 
       <!-- PrimeVue Dialog -->
-      <Dialog v-model:visible="showModal" modal>
+     <!-- PrimeVue Dialog -->
+     <Dialog v-model:visible="showModal" modal :closable="false">
+        <div class="modal-content">
         <h3>Вы еще должны {{ (totalCost - totalPaid).toFixed(2) }} руб.</h3>
         <p>Пожалуйста, введите достаточную сумму, чтобы покрыть все расходы.</p>
-        <button @click="showModal = false">Закрыть</button>
+        <button @click="showModal = false" class="closebtn">Закрыть</button>
+      </div>
       </Dialog>
+      
+      
     </div>
     <div v-else>
       <bill-list :currentTab="currentTab" :debts="debts"></bill-list>
@@ -111,7 +116,9 @@ export default {
          showModalIfDebtExists() {
     if (this.totalCost > this.totalPaid) {
       this.showModal = true;
-    } else {
+    } 
+ 
+    else {
       this.changeScreen('bill-list');
     }
   },
@@ -199,40 +206,31 @@ export default {
 
 
 
-<style scoped>
+<style lang="scss" scoped>
 
 
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
 
-.modal-content {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 4px;
-  text-align: center;
-}
+  .modal-content {
+    background-color: #fff;
+    padding: 20px;
+    text-align: center;
+    border: 4px solid #27282c;
 
-.modal h3 {
-  margin-top: 0;
-}
+    h3 {
+      margin-top: 0;
+    }
 
-.modal p {
-  margin-bottom: 10px;
-}
+    button {
+      margin-top: 20px;
+      background: #27282c;
+    }
+  }
 
-.modal button {
+
+.closebtn {
   padding: 8px 16px;
-  background-color: #007bff;
+  color: rgba(255, 255, 255, 0.616);
+  background: #444;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -240,9 +238,10 @@ export default {
 }
 
 .p-inputtext {
-  width: 150px; 
-  border-radius: 10px; 
+  width: 150px;
+  border-radius: 10px;
 }
+
 .btnn {
   margin-top: 30px;
   position: relative;
@@ -257,167 +256,125 @@ export default {
   display: inline-block;
   border: none;
   cursor: pointer;
+  color: white;
+
+  &:hover {
+    color: #fff;
+    background: #048bfa;
+    letter-spacing: 0.25em;
+    transition: 0.5s;
+  }
+
+  &:hover span i {
+    color: #fff;
+    letter-spacing: 0.25em;
+    transition: 0.5s;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 2px;
+    background: #27282c;
+  }
+
+  span {
+    position: relative;
+    z-index: 1;
+  }
+
+  .i {
+    position: absolute;
+    inset: 0;
+    display: block;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: -3.5px;
+      left: 80%;
+      width: 10px;
+      height: 6px;
+      background: #27282c;
+      border: 2px solid #048bfa;
+      transform: translateX(-50%);
+      transition: 0.5s;
+    }
+
+    &:hover::before {
+      width: 6px;
+      left: calc(50% - 3px);
+      border: 2px solid #048bfa;
+      box-shadow: 70px 0 #fff, -70px 0 #048bfa, -70px 0 0 4px #27282c, 10px -10px #048bfa;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: -3.5px;
+      left: 20%;
+      width: 10px;
+      height: 6px;
+      background: #27282c;
+      border: 2px solid #048bfa;
+      transform: translateX(-50%);
+      transition: 0.5s;
+    }
+
+    &:hover::after {
+      width: 6px;
+      left: calc(50% - 3px);
+      border: 2px solid #048bfa;
+      box-shadow: 70px 0 #fff;
+    }
+  }
 }
 
-.btnn:hover {
-  color: #fff;
-  background: #048bfa;
-  letter-spacing: 0.25em;
-  transition: 0.5s;
-}
-
-.btnn:hover span i {
-  color: #fff;
-  letter-spacing: 0.25em;
-  transition: 0.5s;
-}
-
-.btnn::before {
-  content: "";
-  position: absolute;
-  inset: 2px;
-  background: #27282c;
-}
-
-.btnn span {
-  position: relative;
-  z-index: 1;
-}
-
-.btnn .i {
-  position: absolute;
-  inset: 0;
-  display: block;
-}
-
-.btnn .i::before {
-  content: "";
-  position: absolute;
-  top: -3.5px;
-  left: 80%;
-  width: 10px;
-  height: 6px;
-  background: #27282c;
-  border: 2px solid #048bfa;
-  transform: translateX(-50%);
-  transition: 0.5s, box-shadow 0.5s;
-}
-
-.btnn:hover .i::before {
-  width: 6px;
-  left: calc(50% - 3px);
-  border: 2px solid #048bfa;
-  box-shadow: 70px 0 #fff, -70px 0 #048bfa, -70px 0 0 4px #27282c, 10px -10px #048bfa  ;
-}
-.btnn .i::after {
-  content: "";
-  position: absolute;
-  bottom: -3.5px;
-  left: 20%;
-  width: 10px;
-  height: 6px;
-  background: #27282c;
-  border: 2px solid #048bfa;
-  transform: translateX(-50%);
-  transition: 0.5s, box-shadow 0.5s;
-}
-
-
-.btnn:hover .i::after {
-  width: 6px;
-  left: calc(50% - 3px);
-  border: 2px solid #048bfa;
-  box-shadow: 70px 0 #fff  ;
-}
 .result {
   text-align: center;
-}
 
-.result h2 {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
+  h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
 
-.result table {
-  width: 100%;
-  border-collapse: collapse;
-}
+  table {
+    width: 100%;
+    border-collapse: collapse;
 
-.result th,
-.result td {
-  padding: 8px;
-  border-bottom: 1px solid #ccc;
-}
+    th,
+    td {
+      padding: 8px;
+      border-bottom: 1px solid #ccc;
+    }
 
-.result th {
-  font-weight: bold;
-  text-align: left;
-}
+    th {
+      font-weight: bold;
+      text-align: left;
+    }
+  }
 
-.cost-column {
-  width: 100px;
-}
+  .cost-column {
+    width: 100px;
+  }
 
-.paid-column {
-  width: 100px;
-}
+  .paid-column {
+    width: 100px;
+  }
 
-.input-number {
-  width: 100%;
+  .tips {
+    margin-top: 20px;
+  }
 }
 
 .tips {
   margin-top: 20px;
-}
-
-
-
-.result {
-  text-align: center;
-}
-
-.result h2 {
-  font-size: 24px;
   font-weight: bold;
-  margin-bottom: 20px;
+
+  .tip-amount {
+    color: #ff7043;
+  }
 }
-
-.result table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.result th,
-.result td {
-  padding: 8px;
-  border-bottom: 1px solid #ccc;
-}
-
-.result th {
-  font-weight: bold;
-  text-align: left;
-}
-
-
-
-
-.input-number {
-    
-
-    border-radius: 15px;
-}
-
-
-
-.tips {
-  margin-top: 20px;
-  font-weight: bold;
-}
-
-.tip-amount {
-  color: #ff7043;
-}
-
 </style>
 

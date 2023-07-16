@@ -30,17 +30,17 @@
         <i class="i"></i>
       </button>
 
+
       <!-- PrimeVue Dialog -->
-     <!-- PrimeVue Dialog -->
-     <Dialog v-model:visible="showModal" modal :closable="false">
+      <Dialog v-model:visible="showModal" modal :closable="false">
         <div class="modal-content">
-        <h3>Вы еще должны {{ (totalCost - totalPaid).toFixed(2) }} руб.</h3>
-        <p>Пожалуйста, введите достаточную сумму, чтобы покрыть все расходы.</p>
-        <button @click="showModal = false" class="closebtn">Закрыть</button>
-      </div>
+          <h3>Вы еще должны {{ (totalCost - totalPaid).toFixed(2) }} руб.</h3>
+          <p>Пожалуйста, введите достаточную сумму, чтобы покрыть все расходы.</p>
+          <button @click="showModal = false" class="closebtn">Закрыть</button>
+        </div>
       </Dialog>
-      
-      
+
+
     </div>
     <div v-else>
       <bill-list :currentTab="currentTab" :debts="debts"></bill-list>
@@ -96,53 +96,53 @@ export default {
     },
 
     tipsAmount() {
-    let totalPaid = 0;
-    for (const personId in this.personPaid) {
-      totalPaid += parseFloat(this.personPaid[personId]);
-    }
-    return totalPaid * 0.1; // Assuming 10% tips
-  },
+      let totalPaid = 0;
+      for (const personId in this.personPaid) {
+        totalPaid += parseFloat(this.personPaid[personId]);
+      }
+      return totalPaid * 0.1; // Assuming 10% tips
+    },
     // Calculate the debts between people
     debts() {
       return this.calculateDebts();
     },
   },
- 
- 
- 
+
+
+
   methods: {
     ...mapMutations([
-      'setCurrentScreen', 
-    'setShowModal'
-  ]),
+      'setCurrentScreen',
+      'setShowModal'
+    ]),
     changeTab(tab) {
       this.currentTab = tab;
     },
     setCurrentScreen(screen) {
-    this.currentScreen = screen;
-  },
+      this.currentScreen = screen;
+    },
     changeScreen(screen) {
-  this.setCurrentScreen(screen);
-},
+      this.setCurrentScreen(screen);
+    },
 
 
-         // Show the modal if there are outstanding debts
-         showModalIfDebtExists() {
-    if (this.totalCost > this.totalPaid) {
-      this.showModal = true;
-    } 
- 
-    else {
-      this.changeScreen('bill-list');
-    }
-  },
+    // Show the modal if there are outstanding debts
+    showModalIfDebtExists() {
+      if (this.totalCost > this.totalPaid) {
+        this.showModal = true;
+      }
+
+      else {
+        this.changeScreen('bill-list');
+      }
+    },
     done() {
       // Emit event with personPaid data
       this.$emit('done', this.personPaid);
     },
 
- 
-// Calculate the debts between people
+
+    // Calculate the debts between people
     calculateDebts() {
       const debts = {
         whoOwes: [],
@@ -209,24 +209,23 @@ export default {
 
 
 <style lang="scss" scoped>
-
 //------------- modal-content----------
 
-  .modal-content {
-    background-color: #fff;
-    padding: 20px;
-    text-align: center;
-    border: 4px solid #27282c;
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  text-align: center;
+  border: 4px solid #27282c;
 
-    h3 {
-      margin-top: 0;
-    }
-
-    button {
-      margin-top: 20px;
-      background: #27282c;
-    }
+  h3 {
+    margin-top: 0;
   }
+
+  button {
+    margin-top: 20px;
+    background: #27282c;
+  }
+}
 
 
 .closebtn {
@@ -331,6 +330,7 @@ export default {
     }
   }
 }
+
 //------------------result table----------
 .result {
   text-align: center;

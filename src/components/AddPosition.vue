@@ -44,17 +44,14 @@
         </button>
       </div>
       <!-- Модальное окно для ошибок -->
-     
-
       <Dialog v-model:visible="showModal" modal :closable="false">
-
         <div class="modal-content">
           <h3 v-if="!isNameValid">Напишите название</h3>
           <h3 v-else-if="!isPriceValid">Бесплатно?</h3>
           <h3 v-else-if="!isPeopleSelected">Выберите, кто ел</h3>
           <button @click="closeModal" class="p-button ok-button">Ок</button>
         </div>
-</Dialog>
+      </Dialog>
 
     </form>
 
@@ -71,10 +68,11 @@
             </div>
           </div>
         </div>
+            <!-- Кнопка удаления позиции -->
         <button @click="handleRemovePosition(index)" class="remove-button">
-          <!-- Кнопка удаления позиции -->
           <i class="pi pi-trash"></i>
         </button>
+
       </li>
     </ul>
     <!-- Промежуточный итог -->
@@ -88,7 +86,7 @@
     <i class="i"></i>
   </button>
 
-  
+
   <Dialog v-model:visible="showPositionModal" modal :closable="false">
 
     <div class="modal-content">
@@ -112,7 +110,7 @@ export default {
     InputText,
     InputNumber,
     Icon,
-    Dialog 
+    Dialog
   },
   data() {
     return {
@@ -120,6 +118,7 @@ export default {
       name: '', // Имя позиции
       price: null, // Цена позиции
       allPeopleSelected: false, // Флаг выбора всех участников
+      showModal: false, // Flag to control the visibility of a modal
     };
   },
   computed: {
@@ -127,7 +126,7 @@ export default {
     ...mapState([
       'people',
       'positions',
-      'showModal'
+
     ]),
 
     // Проверка валидности имени
@@ -157,10 +156,10 @@ export default {
 
   methods: {
     ...mapMutations([
-    'setShowModal', 
-    'removePosition', 
-    'setPositions'
-  ]),
+      'removePosition',
+      'setPositions'
+    ]),
+
     openPositionModal() {
       if (this.positions.length < 2) {
         this.showPositionModal = true;
@@ -178,7 +177,7 @@ export default {
 
     // Закрыть модальное окно
     closeModal() {
-      this.setShowModal(false);
+      this.showModal = false;
     },
 
     // Добавление позиции
@@ -189,18 +188,17 @@ export default {
     // является ли позиция действительной перед добавлением
 
     addPosition() {
-  if (!this.isPositionValid) {
-    this.setShowModal(true);
-    return;
-  }
+      if (!this.isPositionValid) {
+        this.showModal = true;
+        return;
+      }
 
       const position = {
         name: this.name,
         price: Number(this.price),
         people: this.people.filter(person => person.checked),
       };
-
-      this.setPositions([...this.positions, position]); // Commit the mutation to update the positions state
+      this.setPositions([...this.positions, position]);
 
       // Reset input values and people selection
       this.name = '';
@@ -255,14 +253,14 @@ export default {
 
     // Получить цвет аватара по индексу
     getAvatarColor(index) {
-      const colors = 
-      [
-        '#048bfa', 
-        '#ff6b6b',
-        '#67d17e', 
-        '#f4b942', 
-        '#7c49b3'
-      ];
+      const colors =
+        [
+          '#048bfa',
+          '#ff6b6b',
+          '#67d17e',
+          '#f4b942',
+          '#7c49b3'
+        ];
       return colors[index % colors.length];
     },
   },
@@ -271,7 +269,7 @@ export default {
 
 
 
-<style scoped>
+<style scoped lang="scss">
 .btnn {
   padding: 10px 20px;
   font-size: 16px;
@@ -280,6 +278,8 @@ export default {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+
+  margin-top: 20px;
 }
 
 .ok-button {
@@ -303,21 +303,21 @@ export default {
 }
 
 
-
 .modal-content {
   background-color: #fff;
   padding: 20px;
   text-align: center;
   border: 4px solid #27282c;
-}
 
-.modal-content h3 {
-  margin-top: 0;
-}
+  h3 {
+    margin-top: 0;
+  }
 
-.modal-content button {
-  margin-top: 20px;
-  background: #27282c;
+  button {
+    margin-top: 20px;
+    background: #27282c;
+  }
+
 }
 
 .add-button_1 {
@@ -332,91 +332,91 @@ export default {
   padding-left: 4px;
 }
 
+//------------------ button-wrapper----------
 .button-wrapper {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 10px;
+  margin-bottom: 30px;
+
+  button {
+    position: relative;
+    display: flex;
+    background-color: #27282c;
+    color: #27282c;
+    letter-spacing: 0.1em;
+    font-weight: 400;
+    padding: 10px 20px;
+    transition: 0.5s;
+    border: none;
+    outline: none;
+    cursor: pointer;
+
+    &:hover {
+      letter-spacing: 0.25em;
+    }
+
+    .pi-plus {
+      &:hover {
+        letter-spacing: 0.25em;
+        transition: 0.5s;
+      }
+    }
+
+    &::before {
+      content: '';
+      background: white;
+      inset: 2px;
+      position: absolute;
+    }
+
+    span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .i {
+      position: absolute;
+      inset: 0;
+      display: block;
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 80%;
+        width: 25px;
+        height: 10px;
+        background: white;
+        transform: translateX(-50%) skewX(325deg);
+        transition: 0.5s;
+      }
+
+      &:hover::before {
+        width: 28px;
+        left: 20%;
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 20%;
+        width: 25px;
+        height: 6px;
+        background: white;
+        transform: translateX(-50%) skewX(325deg);
+        transition: 0.5s;
+      }
+
+      &:hover::after {
+        width: 28px;
+        left: 80%;
+      }
+    }
+  }
 }
 
-.button-wrapper button {
-
-  position: relative;
-  display: flex;
-  background-color: #27282c;
-  color: #27282c;
-  letter-spacing: 0.1em;
-  font-weight: 400;
-  padding: 10px 20px;
-  transition: 0.5s;
-  border: none;
-  outline: none;
-  cursor: pointer;
-}
-
-.button-wrapper button:hover {
-
-
-  letter-spacing: 0.25em;
-
-}
-
-.button-wrapper button:hover .pi-plus {
-  /* color: #048bfa; */
-  letter-spacing: 0.25em;
-  transition: 0.5s;
-}
-
-.button-wrapper button::before {
-  content: '';
-  background: white;
-  inset: 2px;
-  position: absolute;
-}
-
-.button-wrapper button span {
-  position: relative;
-  z-index: 1;
-}
-
-.button-wrapper button .i {
-  position: absolute;
-  inset: 0;
-  display: block;
-}
-
-.button-wrapper button .i::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 80%;
-  width: 25px;
-  height: 10px;
-  background: white;
-  transform: translateX(-50%) skewX(325deg);
-  transition: 0.5s;
-}
-
-.button-wrapper button:hover .i::before {
-  width: 28px;
-  left: 20%;
-}
-
-.button-wrapper button .i::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 20%;
-  width: 25px;
-  height: 6px;
-  background: white;
-  transform: translateX(-50%) skewX(325deg);
-  transition: 0.5s;
-}
-
-.button-wrapper button:hover .i::after {
-  width: 28px;
-  left: 80%;
-}
 
 
 .itog {
@@ -523,10 +523,11 @@ export default {
   background-color: transparent;
   border: none;
   cursor: pointer;
-}
 
-.remove-button i {
-  font-size: 1.5rem;
-  color: #f00;
+  i {
+    font-size: 1.5rem;
+    color: #f00;
+  }
+
 }
 </style>

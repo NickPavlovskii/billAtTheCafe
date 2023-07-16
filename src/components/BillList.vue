@@ -75,7 +75,23 @@ export default {
 };
 </script>
 
-<style >
+<style scoped >
+
+.bill-list::-webkit-scrollbar {
+  width: 8px;
+  background-color: #f5f5f5;
+}
+
+.bill-list::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: #048bfa;
+}
+
+.bill-list::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+
 .Nikname {
   color: #048bfa;
   font-weight: bold;

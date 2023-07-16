@@ -1,6 +1,6 @@
 <template>
   <div class="add-person-container add-person">
-    <h2>Добавить человека</h2>
+    <h2 style="margin-bottom:30px ;">Добавить человека</h2>
     <form @submit.prevent="addPerson">
       <label>
         <div class="p-inputgroup flex-">
@@ -21,7 +21,7 @@
           <span class="dob"> Добавить</span>
         </button>
       </div>
-      <!-- Текст, отображаемый при отсутствии добавленных персон -->
+
       <div v-if="people.length === 0" class="add-someone-text">
         <p>Добавим кого-нибудь!</p>
         <i class="pi pi-user-plus"></i>
@@ -95,7 +95,8 @@ export default {
     goToNextScreen() {
       if (this.people.length >= 2) {
         this.$router.push('/add-positions');
-      } else {
+      }
+      else {
         this.showModal = true;
       }
     },
@@ -103,7 +104,7 @@ export default {
     deletePerson(person) {
       const index = this.people.findIndex((p) => p.id === person.id);
       if (index !== -1) {
-        this.mutationDeletePerson(person); // Call the renamed mutation
+        this.mutationDeletePerson(person); 
       }
     },
 
@@ -113,21 +114,19 @@ export default {
           id: Date.now(),
           name: this.newPerson.name.trim(),
         };
-        this.mutationAddPerson(newPersonObject); // Call the renamed mutation
+        this.mutationAddPerson(newPersonObject); 
         this.newPerson.name = '';
       }
     },
   },
   computed: {
-    ...mapState([
-      'people']),
+    ...mapState(['people']),
   },
 };
 </script>
 
 
 <style lang="scss" scoped>
-
 //------------------------ result-button----------------
 .result-button {
   margin-top: 30px;
@@ -344,6 +343,7 @@ export default {
 
 }
 
+//-------------person-list --------------
 .person-list {
   position: absolute;
   top: 0;
@@ -355,20 +355,21 @@ export default {
   overflow-y: auto;
   overflow-x: hidden;
   border-radius: 4px;
-}
 
-.person-list::-webkit-scrollbar {
-  width: 8px;
-  background-color: #f5f5f5;
-}
+  /* Scrollbar styles */
+  &::-webkit-scrollbar {
+    width: 8px;
+    background-color: #f5f5f5;
+  }
 
-.person-list::-webkit-scrollbar-thumb {
-  border-radius: 4px;
-  background-color: #048bfa;
-}
+  &::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: #048bfa;
+  }
 
-.person-list::-webkit-scrollbar-thumb:hover {
-  background-color: #555;
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+  }
 }
 
 .person-item {
@@ -428,5 +429,4 @@ export default {
   margin-top: 20px;
   background: #27282c;
 }
-
 </style>

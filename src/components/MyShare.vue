@@ -74,8 +74,7 @@ export default {
 .menu {
   position: relative;
   display: flex;
- margin-top: 20px;
- margin-right: 20px;
+
 
  & li a{
   position: relative;

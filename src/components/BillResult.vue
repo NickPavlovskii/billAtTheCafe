@@ -164,6 +164,7 @@ export default {
               if (otherPersonDiff < 0) {
                 const debtAmount = Math.min(diff, -otherPersonDiff);
                 debts.whoIsOwed.push({
+                  id: Math.floor(Math.random() * 900000000 + 100000000),
                   from: person.name,
                   to: otherPerson.name,
                   amount: debtAmount.toFixed(2),
@@ -186,6 +187,7 @@ export default {
               if (otherPersonDiff > 0) {
                 const debtAmount = Math.min(-diff, otherPersonDiff);
                 debts.whoOwes.push({
+                  id: Math.floor(Math.random() * 900000000 + 100000000),
                   from: otherPerson.name,
                   to: person.name,
                   amount: debtAmount.toFixed(2),

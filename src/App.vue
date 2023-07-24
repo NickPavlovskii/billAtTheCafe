@@ -107,19 +107,13 @@ export default {
   }
 }
 
-
-
-
-
 .niklad-tag {
   position: absolute;
   bottom: 10px;
   right: 10px;
   padding: 0px 2px;
   font-size: 14px;
-
 }
-
 
 .app-icon {
 
@@ -128,18 +122,14 @@ export default {
   cursor: pointer;
 }
 
-
-
 .app-icons-home {
   position: relative;
-
   font-size: 1.5em;
 }
 
 .app-icon:hover {
   color: #048bfa;
 }
-
 
 </style>
 

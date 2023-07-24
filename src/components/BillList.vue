@@ -17,7 +17,7 @@
 <!-- Display debts for "Who Owes" tab -->
     <div v-if="currentTab === 'who-owes'" class="bill-list">
       <ul v-if="debts.whoOwes.length > 0" class="custom-list"> <!-- List item for each debt -->
-        <li v-for="(debt, index) in debts.whoOwes" :key="index" class="custom-list-item">
+        <li v-for="debt in debts.whoOwes" :key="debt.id" class="custom-list-item">
           <span class="debt-info">
             <span class="debt-amount">{{ debt.amount }} 
             </span>
@@ -36,7 +36,7 @@
     <!-- Display debts for "Who Is Owed" tab -->
     <div v-if="currentTab === 'who-is-owed'" class="bill-list">
       <ul v-if="debts.whoIsOwed.length > 0" class="custom-list"> <!-- List item for each debt -->
-        <li v-for="(debt, index) in debts.whoIsOwed" :key="'debt-'+index" class="custom-list-item"> 
+        <li v-for="debt in debts.whoIsOwed" :key="debt.id" class="custom-list-item"> 
           <span class="debt-info">
             <span class="debt-amount">{{ debt.amount }}</span>
             <span class="currency-symbol">&#8381;</span>
@@ -57,6 +57,7 @@ export default {
   
   props: {
     debts: {
+      
       type: Object,
       required: true,
     },

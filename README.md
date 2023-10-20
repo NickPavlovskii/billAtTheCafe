@@ -2,7 +2,7 @@
 
 Cafe Bill Splitter - это веб-приложение, которое позволяет участникам группы разделять счета и рассчитывать долги. Приложение разработано с использованием фреймворка Vue.js и предоставляет удобный и интуитивно понятный интерфейс для управления расчетами и долгами.
 
-**Ссылка на приложение**: [Cafe Bill Splitter]([https://www.example.com/cofebill](https://main--regal-smakager-265371.netlify.app/))
+**Ссылка на приложение**:[Cafe Bill Splitter](https://main--regal-smakager-265371.netlify.app/)
 
 ## Установка
 

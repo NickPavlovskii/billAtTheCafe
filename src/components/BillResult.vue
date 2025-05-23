@@ -11,34 +11,50 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(person, index) in people" :key="index">
-    <td>{{ person.name }}</td>
-    <td class="cost-column">{{ personCosts[person.id].toFixed(2) }} руб.</td>
-    <td>
-      <div class="col-12 mb-2 lg:col-4 lg:mb-0">
-        <input class="p-inputtext p-component" v-model="personPaid[person.id]" />
-      </div>
-    </td>
-  </tr>
+          <tr
+            v-for="(person, index) in people"
+            :key="index"
+          >
+            <td>{{ person.name }}</td>
+            <td class="cost-column">
+              {{ personCosts[person.id].toFixed(2) }} руб.
+            </td>
+            <td>
+              <div class="col-12 mb-2 lg:col-4 lg:mb-0">
+                <input
+                  class="p-inputtext p-component"
+                  v-model="personPaid[person.id]"
+                />
+              </div>
+            </td>
+          </tr>
         </tbody>
       </table>
       <div class="tips">
-        Общие чаевые: <span class="tip-amount">{{ calculateTips() }} руб.</span>
+        Общие чаевые:
+        <span class="tip-amount">{{ calculateTips() }} руб.</span>
       </div>
-      <button @click="showModalIfDebtExists" class="p-mt-3 add-button addbtn btnn">
+      <button
+        @click="showModalIfDebtExists"
+        class="p-mt-3 add-button addbtn btnn"
+      >
         <span>Кто кому должен</span>
         <i class="i"></i>
       </button>
 
-<!-- Модальное окно -->
-<div v-if="showModal" class="modal">
-    <div class="modal-content">
-      <h3>Вы еще должны {{ (totalCost - totalPaid).toFixed(2) }} руб.</h3>
-      <p>Пожалуйста, введите достаточную сумму, чтобы покрыть все расходы.</p>
-      <button @click="showModal = false">Закрыть</button>
-    </div>
-  </div>
-
+      <!-- Модальное окно -->
+      <div
+        v-if="showModal"
+        class="modal"
+      >
+        <div class="modal-content">
+          <h3>Вы еще должны {{ (totalCost - totalPaid).toFixed(2) }} руб.</h3>
+          <p>
+            Пожалуйста, введите достаточную сумму, чтобы покрыть все расходы.
+          </p>
+          <button @click="showModal = false">Закрыть</button>
+        </div>
+      </div>
     </div>
     <div v-else>
       <BillList :debts="debts" />
@@ -47,415 +63,401 @@
 </template>
 
 <script>
-// import InputNumber from 'primevue/inputnumber';
-import BillList from './BillList.vue';
+  // import InputNumber from 'primevue/inputnumber';
+  import BillList from './BillList.vue'
 
-export default {
-  components: {
-    // InputNumber,
-    BillList,
-  },
-  props: {
-    positions: {
-      type: Array,
-      required: true,
+  export default {
+    components: {
+      // InputNumber,
+      BillList,
     },
-    people: {
-      type: Array,
-      required: true,
+    props: {
+      positions: {
+        type: Array,
+        required: true,
+      },
+      people: {
+        type: Array,
+        required: true,
+      },
     },
-  },
-  computed: {
-    totalCost() {
-    return Object.values(this.personCosts).reduce((sum, cost) => sum + cost, 0);
-  },
+    computed: {
+      totalCost() {
+        return Object.values(this.personCosts).reduce(
+          (sum, cost) => sum + cost,
+          0
+        )
+      },
 
-  totalPaid() {
-    return Object.values(this.personPaid).reduce((sum, paid) => sum + parseFloat(paid || 0), 0);
-  },
-  personCosts() {
-      const costs = {};
+      totalPaid() {
+        return Object.values(this.personPaid).reduce(
+          (sum, paid) => sum + parseFloat(paid || 0),
+          0
+        )
+      },
+      personCosts() {
+        const costs = {}
 
-      for (const person of this.people) {
-        let totalCost = 0;
-        for (const position of this.positions) {
-          if (position.people.includes(person)) {
-            totalCost += position.price / Math.round(position.people.length);
+        for (const person of this.people) {
+          let totalCost = 0
+          for (const position of this.positions) {
+            if (position.people.includes(person)) {
+              totalCost += position.price / Math.round(position.people.length)
+            }
           }
+          costs[person.id] = totalCost
         }
-        costs[person.id] = totalCost;
+
+        return costs
+      },
+      debts() {
+        return this.calculateDebts()
+      },
+    },
+    data() {
+      return {
+        personPaid: {},
+        currentScreen: 'result',
+        showModal: false,
       }
-
-      return costs;
     },
-    debts() {
-      return this.calculateDebts();
-    },
-  },
-  data() {
-    return {
-      personPaid: {},
-      currentScreen: 'result',
-      showModal: false,
-    };
-  },
-  methods: {
-    showModalIfDebtExists() {
-    if (this.totalCost > this.totalPaid) {
-      this.showModal = true;
-    }
-    else{
-      this.currentScreen = 'bill-list'
-    }
-  },
-    done() {
-      // Emit event with personPaid data
-      this.$emit('done', this.personPaid);
-    },
+    methods: {
+      showModalIfDebtExists() {
+        if (this.totalCost > this.totalPaid) {
+          this.showModal = true
+        } else {
+          this.currentScreen = 'bill-list'
+        }
+      },
+      done() {
+        // Emit event with personPaid data
+        this.$emit('done', this.personPaid)
+      },
 
-    calculateTips() {
-      let totalPaid = 0;
-      for (const personId in this.personPaid) {
-        totalPaid += parseFloat(this.personPaid[personId]);
-      }
-      return totalPaid * 0.1; // Assuming 10% tips
-    },
+      calculateTips() {
+        let totalPaid = 0
+        for (const personId in this.personPaid) {
+          totalPaid += parseFloat(this.personPaid[personId])
+        }
+        return totalPaid * 0.1 // Assuming 10% tips
+      },
 
-    calculateDebts() {
-      const debts = {
-        whoOwes: [],
-        whoIsOwed: [],
-      };
+      calculateDebts() {
+        const debts = {
+          whoOwes: [],
+          whoIsOwed: [],
+        }
 
-      for (const person of this.people) {
-        const cost = this.personCosts[person.id];
-        const paid = this.personPaid[person.id] || 0;
-        let diff = paid - cost;
+        for (const person of this.people) {
+          const cost = this.personCosts[person.id]
+          const paid = this.personPaid[person.id] || 0
+          let diff = paid - cost
 
-        if (diff > 0) {
-          for (const otherPerson of this.people) {
-            if (otherPerson !== person) {
-              const otherPersonCost = this.personCosts[otherPerson.id];
-              const otherPersonPaid = this.personPaid[otherPerson.id] || 0;
-              const otherPersonDiff = otherPersonPaid - otherPersonCost;
+          if (diff > 0) {
+            for (const otherPerson of this.people) {
+              if (otherPerson !== person) {
+                const otherPersonCost = this.personCosts[otherPerson.id]
+                const otherPersonPaid = this.personPaid[otherPerson.id] || 0
+                const otherPersonDiff = otherPersonPaid - otherPersonCost
 
-              if (otherPersonDiff < 0) {
-                const debtAmount = Math.min(diff, -otherPersonDiff);
-                debts.whoIsOwed.push({
-                  from: person.name,
-                  to: otherPerson.name,
-                  amount: debtAmount.toFixed(2),
-                });
+                if (otherPersonDiff < 0) {
+                  const debtAmount = Math.min(diff, -otherPersonDiff)
+                  debts.whoIsOwed.push({
+                    from: person.name,
+                    to: otherPerson.name,
+                    amount: debtAmount.toFixed(2),
+                  })
 
-                diff -= debtAmount;
-                if (diff <= 0) {
-                  break;
+                  diff -= debtAmount
+                  if (diff <= 0) {
+                    break
+                  }
+                }
+              }
+            }
+          } else if (diff < 0) {
+            for (const otherPerson of this.people) {
+              if (otherPerson !== person) {
+                const otherPersonCost = this.personCosts[otherPerson.id]
+                const otherPersonPaid = this.personPaid[otherPerson.id] || 0
+                const otherPersonDiff = otherPersonPaid - otherPersonCost
+
+                if (otherPersonDiff > 0) {
+                  const debtAmount = Math.min(-diff, otherPersonDiff)
+                  debts.whoOwes.push({
+                    from: otherPerson.name,
+                    to: person.name,
+                    amount: debtAmount.toFixed(2),
+                  })
+
+                  diff += debtAmount
+                  if (diff >= 0) {
+                    break
+                  }
                 }
               }
             }
           }
-        } else if (diff < 0) {
-          for (const otherPerson of this.people) {
-            if (otherPerson !== person) {
-              const otherPersonCost = this.personCosts[otherPerson.id];
-              const otherPersonPaid = this.personPaid[otherPerson.id] || 0;
-              const otherPersonDiff = otherPersonPaid - otherPersonCost;
-
-              if (otherPersonDiff > 0) {
-                const debtAmount = Math.min(-diff, otherPersonDiff);
-                debts.whoOwes.push({
-                  from: otherPerson.name,
-                  to: person.name,
-                  amount: debtAmount.toFixed(2),
-                });
-
-                diff += debtAmount;
-                if (diff >= 0) {
-                  break;
-                }
-              }
-            }
-          }
         }
-      }
 
-      return debts;
+        return debts
+      },
     },
-  },
-};
+  }
 </script>
 
-
-
-
-
-
-
-
 <style scoped>
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
 
+  .modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 4px;
+    text-align: center;
+  }
 
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999; /* Убедитесь, что z-index достаточно большой, чтобы модальное окно было видимым над другими элементами */
-}
+  .modal h3 {
+    margin-top: 0;
+  }
 
-.modal-content {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 4px;
-  text-align: center;
-}
+  .modal p {
+    margin-bottom: 10px;
+  }
 
-.modal h3 {
-  margin-top: 0;
-}
+  .modal button {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
 
-.modal p {
-  margin-bottom: 10px;
-}
+  .p-inputtext {
+    width: 150px;
+    border-radius: 10px;
+  }
+  .btnn {
+    margin-top: 30px;
+    position: relative;
+    color: rgba(255, 255, 255, 0.616);
+    background: #444;
+    font-size: 1em;
+    letter-spacing: 0.1em;
+    font-weight: 400;
+    padding: 10px 30px;
+    transition: 0.5s;
+    text-decoration: none;
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+  }
 
-.modal button {
-  padding: 8px 16px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
+  .btnn:hover {
+    color: #fff;
+    background: #048bfa;
+    letter-spacing: 0.25em;
+    transition: 0.5s;
+  }
 
-.p-inputtext {
-  width: 150px; /* Измените значение, чтобы установить желаемую ширину */
-  border-radius: 10px; /* Измените значение, чтобы установить желаемую закругленность */
-}
-.btnn {
-  margin-top: 30px;
-  position: relative;
-  color: rgba(255, 255, 255, 0.616);
-  background: #444;
-  font-size: 1.0em;
-  letter-spacing: 0.1em;
-  font-weight: 400;
-  padding: 10px 30px;
-  transition: 0.5s;
-  text-decoration: none;
-  display: inline-block;
-  border: none;
-  cursor: pointer;
-}
+  .btnn:hover span i {
+    color: #fff;
+    letter-spacing: 0.25em;
+    transition: 0.5s;
+  }
 
-.btnn:hover {
-  color: #fff;
-  background: #048bfa;
-  letter-spacing: 0.25em;
-  transition: 0.5s;
-}
+  .btnn::before {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    background: #27282c;
+  }
 
-.btnn:hover span i {
-  color: #fff;
-  letter-spacing: 0.25em;
-  transition: 0.5s;
-}
+  .btnn span {
+    position: relative;
+    z-index: 1;
+  }
 
-.btnn::before {
-  content: "";
-  position: absolute;
-  inset: 2px;
-  background: #27282c;
-}
+  .btnn .i {
+    position: absolute;
+    inset: 0;
+    display: block;
+  }
 
-.btnn span {
-  position: relative;
-  z-index: 1;
-}
+  .btnn .i::before {
+    content: '';
+    position: absolute;
+    top: -3.5px;
+    left: 80%;
+    width: 10px;
+    height: 6px;
+    background: #27282c;
+    border: 2px solid #048bfa;
+    transform: translateX(-50%);
+    transition: 0.5s, box-shadow 0.5s;
+  }
 
-.btnn .i {
-  position: absolute;
-  inset: 0;
-  display: block;
-}
+  .btnn:hover .i::before {
+    width: 6px;
+    left: calc(50% - 3px);
+    border: 2px solid #048bfa;
+    box-shadow: 70px 0 #fff, -70px 0 #048bfa, -70px 0 0 4px #27282c,
+      10px -10px #048bfa;
+  }
+  .btnn .i::after {
+    content: '';
+    position: absolute;
+    bottom: -3.5px;
+    left: 20%;
+    width: 10px;
+    height: 6px;
+    background: #27282c;
+    border: 2px solid #048bfa;
+    transform: translateX(-50%);
+    transition: 0.5s, box-shadow 0.5s;
+  }
 
-.btnn .i::before {
-  content: "";
-  position: absolute;
-  top: -3.5px;
-  left: 80%;
-  width: 10px;
-  height: 6px;
-  background: #27282c;
-  border: 2px solid #048bfa;
-  transform: translateX(-50%);
-  transition: 0.5s, box-shadow 0.5s;
-}
+  .btnn:hover .i::after {
+    width: 6px;
+    left: calc(50% - 3px);
+    border: 2px solid #048bfa;
+    box-shadow: 70px 0 #fff;
+  }
+  .result {
+    text-align: center;
+  }
 
-.btnn:hover .i::before {
-  width: 6px;
-  left: calc(50% - 3px);
-  border: 2px solid #048bfa;
-  box-shadow: 70px 0 #fff, -70px 0 #048bfa, -70px 0 0 4px #27282c, 10px -10px #048bfa  ;
-}
-.btnn .i::after {
-  content: "";
-  position: absolute;
-  bottom: -3.5px;
-  left: 20%;
-  width: 10px;
-  height: 6px;
-  background: #27282c;
-  border: 2px solid #048bfa;
-  transform: translateX(-50%);
-  transition: 0.5s, box-shadow 0.5s;
-}
+  .result h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
 
+  .result table {
+    width: 100%;
+    border-collapse: collapse;
+  }
 
-.btnn:hover .i::after {
-  width: 6px;
-  left: calc(50% - 3px);
-  border: 2px solid #048bfa;
-  box-shadow: 70px 0 #fff  ;
-}
-.result {
-  text-align: center;
-}
+  .result th,
+  .result td {
+    padding: 8px;
+    border-bottom: 1px solid #ccc;
+  }
 
-.result h2 {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
+  .result th {
+    font-weight: bold;
+    text-align: left;
+  }
 
-.result table {
-  width: 100%;
-  border-collapse: collapse;
-}
+  .cost-column {
+    width: 100px;
+  }
 
-.result th,
-.result td {
-  padding: 8px;
-  border-bottom: 1px solid #ccc;
-}
+  .paid-column {
+    width: 100px;
+  }
 
-.result th {
-  font-weight: bold;
-  text-align: left;
-}
+  .input-number {
+    width: 100%;
+  }
 
-.cost-column {
-  width: 100px;
-}
+  .tips {
+    margin-top: 20px;
+  }
 
-.paid-column {
-  width: 100px;
-}
+  .bill-owe {
+    margin-top: 40px;
+  }
 
-.input-number {
-  width: 100%;
-}
+  .bill-tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
 
-.tips {
-  margin-top: 20px;
-}
+  .bill-tabs button {
+    margin-right: 10px;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    background-color: #f2f2f2;
+    cursor: pointer;
+  }
 
-.bill-owe {
-  margin-top: 40px;
-}
+  .bill-tabs button.active {
+    background-color: #ddd;
+  }
 
-.bill-tabs {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 10px;
-}
+  .bill-list {
+    margin-top: 10px;
+  }
 
-.bill-tabs button {
-  margin-right: 10px;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 4px;
-  background-color: #f2f2f2;
-  cursor: pointer;
-}
+  .bill-list h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
 
-.bill-tabs button.active {
-  background-color: #ddd;
-}
+  .bill-list ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
 
-.bill-list {
-  margin-top: 10px;
-}
-
-.bill-list h3 {
-  font-size: 18px;
-  margin-bottom: 10px;
-}
-
-.bill-list ul {
-  list-style-type: none;
-  padding-left: 0;
-}
-
-.bill-list li {
-  margin-bottom: 5px;
-}
+  .bill-list li {
+    margin-bottom: 5px;
+  }
 </style>
 
-
 <style scoped>
-.result {
-  text-align: center;
-}
+  .result {
+    text-align: center;
+  }
 
-.result h2 {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
+  .result h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
 
-.result table {
-  width: 100%;
-  border-collapse: collapse;
-}
+  .result table {
+    width: 100%;
+    border-collapse: collapse;
+  }
 
-.result th,
-.result td {
-  padding: 8px;
-  border-bottom: 1px solid #ccc;
-}
+  .result th,
+  .result td {
+    padding: 8px;
+    border-bottom: 1px solid #ccc;
+  }
 
-.result th {
-  font-weight: bold;
-  text-align: left;
-}
+  .result th {
+    font-weight: bold;
+    text-align: left;
+  }
 
-
-
-
-.input-number {
-    
-
+  .input-number {
     border-radius: 15px;
-}
+  }
 
+  .tips {
+    margin-top: 20px;
+    font-weight: bold;
+  }
 
-
-.tips {
-  margin-top: 20px;
-  font-weight: bold;
-}
-
-.tip-amount {
-  color: #ff7043;
-}
-
+  .tip-amount {
+    color: #ff7043;
+  }
 </style>
-
 
 <!-- 
 

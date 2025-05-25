@@ -61,7 +61,6 @@
       return {
         defaultTip: 10,
         theme: 'dark',
-        language: 'ru',
         themeOptions: [
           { label: 'Светлая(в разработке)', value: 'light' },
           { label: 'Тёмная', value: 'dark' },
@@ -76,11 +75,11 @@
       loadSettings() {
         const storedTip = localStorage.getItem('defaultTip')
         const storedTheme = localStorage.getItem('theme')
-        const storedLang = localStorage.getItem('language')
+
 
         if (storedTip !== null) this.defaultTip = Number(storedTip)
         if (storedTheme) this.theme = storedTheme
-        if (storedLang) this.language = storedLang
+
 
         document.body.className =
           this.theme === 'dark' ? 'dark-theme' : 'light-theme'
@@ -89,11 +88,9 @@
       applySettings() {
         localStorage.setItem('defaultTip', this.defaultTip)
         localStorage.setItem('theme', this.theme)
-        localStorage.setItem('language', this.language)
 
         this.$emit('update-default-tip', this.defaultTip)
         this.$emit('update-theme', this.theme)
-        this.$emit('update-language', this.language)
 
         document.body.className =
           this.theme === 'dark' ? 'dark-theme' : 'light-theme'
@@ -104,11 +101,10 @@
       resetData() {
         localStorage.removeItem('defaultTip')
         localStorage.removeItem('theme')
-        localStorage.removeItem('language')
 
         this.defaultTip = 10
         this.theme = 'light'
-        this.language = 'ru'
+
 
         this.applySettings()
         this.$emit('reset-all')

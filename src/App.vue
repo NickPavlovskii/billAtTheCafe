@@ -73,7 +73,7 @@
     </div>
     <div class="niklad-tag">@Niklad</div>
     <!-- People Modal Modal -->
-    <PrimeDialog
+    <Dialog
       header="Ошибка"
       v-model:visible="showModal"
       class="modal-overlay"
@@ -92,9 +92,9 @@
           Ок
         </button>
       </template>
-    </PrimeDialog>
+    </Dialog>
     <!-- Position Modal -->
-    <PrimeDialog
+    <Dialog
       v-model:visible="showPositionModal"
       header="Ошибка"
       class="modal-overlay"
@@ -111,11 +111,15 @@
           Ок
         </button>
       </template>
-    </PrimeDialog>
+    </Dialog>
   </div>
 </template>
 
 <script>
+  import 'primevue/resources/themes/saga-blue/theme.css'
+  import 'primevue/resources/primevue.min.css'
+  import 'primeicons/primeicons.css'
+  import Dialog from 'primevue/dialog'
   import AddPersons from './components/AddPerson.vue'
   import AddPositions from './components/AddPosition.vue'
   import BillResult from './components/BillResult.vue'
@@ -126,7 +130,7 @@
   export default {
     components: {
       MainScreen,
-
+      Dialog,
       AddPersons,
       AddPositions,
       BillResult,

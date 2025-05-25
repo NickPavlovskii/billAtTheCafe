@@ -24,22 +24,25 @@
       @click.self="showModal = false"
     >
       <template #header>
-        <div class="inline-flex items-center justify-center gap-2">
-          <h3>
+        <div class="inline-flex items-center justify-center gap-1">
+          <h3 style="display: flex">
             <Icon
               icon="fluent-mdl2:hint-text"
-              style="margin-bottom: -3px"
+              style="margin-top: 6px"
             />
-            Инструкция
+            <span
+              class="ml-2"
+              style="color: #2196f3"
+            >
+              Инструкция
+            </span>
           </h3>
         </div>
       </template>
       <div
-        class="flex items-start gap-4 mb-6 bg-white p-6 rounded-xl shadow-md border border-gray-200"
+        class="flex items-start gap-1 mb-2 bg-white rounded-xl shadow-md border border-gray-200"
       >
-        <ol
-          class="list-decimal list-inside text-gray-800 text-base leading-relaxed space-y-2"
-        >
+        <ul>
           <li>
             <strong>Шаг 1:</strong>
             Добавьте участников счета
@@ -52,14 +55,13 @@
             <strong>Шаг 3:</strong>
             Получите результат
           </li>
-        </ol>
+        </ul>
       </div>
 
       <template #footer>
         <Button
           label="Закрыть"
           text
-          severity="secondary"
           autofocus
           style="margin-top: 20px"
           @click="showModal = false"
@@ -67,7 +69,7 @@
       </template>
     </Dialog>
     <img
-      src="cofe.png"
+      src="/Cofe.png"
       class="background-image"
       alt="coffee image"
     />

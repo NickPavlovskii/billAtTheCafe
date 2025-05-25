@@ -76,18 +76,16 @@
     <Dialog
       header="Ошибка"
       v-model:visible="showModal"
-      class="modal-overlay"
       @click="closeModal"
     >
-      <div class="modal-content">
+      <div>
         <h3 v-if="people.length === 0">Но тут же никого нет 🤔</h3>
         <h3 v-else-if="people.length === 1">Добавьте еще кого-нибудь!</h3>
       </div>
       <template #footer>
         <button
-          @click="showModal = false"
           class="p-button"
-          style="margin-top: 20px"
+          @click="showModal = false"
         >
           Ок
         </button>
@@ -97,10 +95,9 @@
     <Dialog
       v-model:visible="showPositionModal"
       header="Ошибка"
-      class="modal-overlay"
       @click="closePositionModal"
     >
-      <div class="modal-content">
+      <div>
         <h3>Должно быть добавлено как минимум 2 позиции</h3>
       </div>
       <template #footer>

@@ -1,155 +1,34 @@
 <template>
   <div>
     <h2 class="title">Добавление позиции</h2>
-    <form
-      class="position-form"
-      @submit.prevent="addPosition"
-    >
-      <div class="form-group">
-        <div class="p-inputgroup flex-1">
-          <span class="p-inputgroup-addon">
-            <Icon
-              icon="fluent:food-24-filled"
-              width="32"
-              height="32"
-            />
-          </span>
-          <InputText
-            type="text"
-            id="name"
-            v-model="name"
-            placeholder="Название"
-            class="input-field"
-          />
-        </div>
-      </div>
-      <div class="p-inputgroup flex-1">
-        <span class="p-inputgroup-addon">
-          <Icon
-            icon="ph:currency-rub-bold"
-            width="32"
-            height="32"
-          />
-        </span>
-        <InputNumber
-          id="price"
-          v-model="price"
-          placeholder="Стоимость"
-          class="input-field"
-        />
-      </div>
-      <div class="form-group">
-        <div class="avatars-container">
-
-          <Avatar
-            label="Все"
-            class="avatar ava"
-            size="small"
-            shape="circle"
-            :class="{ active: allPeopleSelected }"
-            @click="selectAllPeople"
-          />
-          <div
-            v-for="(person, personIndex) in people"
-            :key="personIndex"
-            class="avatar-wrapper"
-          >
-            <Avatar
-              :label="person.name[0]"
-              class="avatar ava"
-              size="small"
-              shape="circle"
-              :class="{ active: person.checked }"
-              @click="toggleAvatarCheck(person)"
-            />
-            <input
-              type="checkbox"
-              v-model="person.checked"
-              class="avatar-checkbox"
-            />
-          </div>
-        </div>
-      </div>
-      <reusable-btn
-        text="Добавить позицию"
-        rightIcon="pi pi-check"
-        @click="addPosition"
-      />
-
-      <div
-        v-if="showModal"
-        class="modal-overlay"
-        @click="closeModal"
-      >
-        <div class="modal-content">
-          <h3 v-if="!isNameValid">Напишите название</h3>
-          <h3 v-else-if="!isPriceValid">Бесплатно?</h3>
-          <h3 v-else-if="!isPeopleSelected">Выберите, кто ел</h3>
-          <button
-            @click="closeModal"
-            class="ok-button"
-          >
-            Ок
-          </button>
-        </div>
-      </div>
-    </form>
-
-    <h3 class="title">Список позиций:</h3>
-    <ul class="position-list">
-      <li
-        v-for="(position, index) in positions"
-        :key="index"
-        class="position-item"
-      >
-        <div class="position-info">
-          <span class="position-name">{{ position.name }}</span>
-          <span class="position-price">{{ position.price }} руб.</span>
-          <div class="avatars-container">
-            <Avatar
-              v-for="(person, personIndex) in position.people"
-              :key="personIndex"
-              :label="person.name[0]"
-              class="avatar ava"
-              :style="{ backgroundColor: getAvatarColor(personIndex) }"
-              :class="{ 'avatar-active': person.checked }"
-              size="small"
-              shape="circle"
-            />
-          </div>
-        </div>
-        <button
-          class="remove-button"
-          @click="removePosition(index)"
-        >
-          <i class="pi pi-trash"></i>
-        </button>
-      </li>
-    </ul>
-
-    <div class="interim-total">
-      <h3>Промежуточный итог:</h3>
-      <p class="itog">
-        {{ calculateTotal() }} руб. (+ {{ calculateTip() }} руб. чаевых)
-      </p>
-    </div>
+    <AddPositionForm
+      :people="people"
+      @add-position="handleAddPosition"
+    />
+    <PositionList
+      :positions="positions"
+      @remove-position="removePosition"
+    />
+    <InterimTotal
+      :positions="positions"
+      :defaultTip="defaultTip"
+    />
   </div>
 </template>
 
 <script>
-  import InputNumber from 'primevue/inputnumber'
-  import InputText from 'primevue/inputtext'
-  import Avatar from 'primevue/avatar'
   import 'primevue/resources/themes/saga-blue/theme.css'
   import 'primevue/resources/primevue.min.css'
   import 'primeicons/primeicons.css'
-  import { Icon } from '@iconify/vue'
+  import AddPositionForm from './AddPosition/AddPositionForm.vue'
+  import PositionList from './AddPosition/PositionList.vue'
+  import InterimTotal from './AddPosition/InterimTotal.vue'
+
   export default {
     components: {
-      InputText,
-      InputNumber,
-      Icon,
-      Avatar,
+      AddPositionForm,
+      PositionList,
+      InterimTotal,
     },
     props: {
       positions: {
@@ -160,8 +39,12 @@
         type: Array,
         required: true,
       },
+      defaultTip: {
+        type: Number,
+        required: true,
+      },
     },
-    computed: {
+    methods: {
       isNameValid() {
         return this.name.trim().length > 0
       },
@@ -171,26 +54,11 @@
       isPeopleSelected() {
         return this.people.some((person) => person.checked)
       },
-
-      isPositionValid() {
-        return (
-          this.name.trim().length > 0 &&
-          this.price !== null &&
-          this.people.some((person) => person.checked)
-        )
+      handleAddPosition(position) {
+        this.$emit('add-position', position)
       },
-    },
-    data() {
-      return {
-        name: '',
-        price: null,
-        allPeopleSelected: false,
-        showModal: false,
-      }
-    },
-    methods: {
-      removePosition(index) {
-        this.$emit('remove-position', index)
+      removePosition(position) {
+        this.$emit('remove-position', position)
       },
       closeModal() {
         this.showModal = false
@@ -260,7 +128,7 @@
   }
 </script>
 
-<style scoped>
+<style>
   .ok-button {
     display: inline-block;
     padding: 0.5rem 1rem;

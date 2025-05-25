@@ -63,17 +63,19 @@
 </template>
 
 <script>
-  // import InputNumber from 'primevue/inputnumber';
-  import BillList from './BillList.vue'
+  import BillList from './BillDebts/BillList.vue'
 
   export default {
     components: {
-      // InputNumber,
       BillList,
     },
     props: {
       positions: {
         type: Array,
+        required: true,
+      },
+      defaultTip: {
+        type: Number,
         required: true,
       },
       people: {
@@ -139,7 +141,8 @@
         for (const personId in this.personPaid) {
           totalPaid += parseFloat(this.personPaid[personId])
         }
-        return totalPaid * 0.1 // Assuming 10% tips
+        console.log(this.defaultTip)
+        return totalPaid * this.defaultTip/100 // Assuming 10% tips
       },
 
       calculateDebts() {

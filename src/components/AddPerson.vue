@@ -7,7 +7,6 @@
           <span class="p-inputgroup-addon">
             <i :class="['pi pi-user', { 'input-group-user': isInputActive }]" />
           </span>
-
           <InputText
             placeholder="Имя"
             v-model="newPerson.name"
@@ -49,9 +48,7 @@
               style="background-color: #ece9fc; color: #2a1261"
               shape="circle"
             />
-
             <span class="person-name">{{ person.name }}</span>
-
             <i
               class="pi pi-times person-delete-icon"
               @click="deletePerson(person)"

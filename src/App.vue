@@ -16,6 +16,13 @@
       v-if="currentScreen === 'main-component'"
       @start="navigateToPersons"
     />
+    <BillSettings
+      v-else-if="currentScreen === 'settings'"
+      @update-default-tip="updateDefaultTip"
+      @update-theme="updateTheme"
+      @update-language="updateLanguage"
+      @reset-all="resetAllData"
+    />
 
     <div
       v-else-if="currentScreen === 'add-persons'"
@@ -42,6 +49,7 @@
         :is-name-valid="isNameValid"
         :is-price-valid="isPriceValid"
         :is-people-selected="isPeopleSelected"
+        :defaultTip="defaultTip"
         @add-position="addPosition"
         @remove-position="removePosition"
       />
@@ -60,11 +68,12 @@
       <bill-result
         :positions="positions"
         :people="people"
+        :defaultTip="defaultTip"
       />
     </div>
     <div class="niklad-tag">@Niklad</div>
     <!-- People Modal Modal -->
-    <Dialog
+    <PrimeDialog
       header="Ошибка"
       v-model:visible="showModal"
       class="modal-overlay"
@@ -83,9 +92,9 @@
           Ок
         </button>
       </template>
-    </Dialog>
+    </PrimeDialog>
     <!-- Position Modal -->
-    <Dialog
+    <PrimeDialog
       v-model:visible="showPositionModal"
       header="Ошибка"
       class="modal-overlay"
@@ -102,29 +111,27 @@
           Ок
         </button>
       </template>
-    </Dialog>
+    </PrimeDialog>
   </div>
 </template>
 
 <script>
-  import 'primevue/resources/themes/saga-blue/theme.css'
-  import 'primevue/resources/primevue.min.css'
-  import 'primeicons/primeicons.css'
-  import Dialog from 'primevue/dialog'
   import AddPersons from './components/AddPerson.vue'
   import AddPositions from './components/AddPosition.vue'
   import BillResult from './components/BillResult.vue'
   import MainScreen from './components/MainScreen.vue'
   import MyShare from './components/MyShare'
+  import BillSettings from './components/BillSettings.vue'
 
   export default {
     components: {
       MainScreen,
-      Dialog,
+
       AddPersons,
       AddPositions,
       BillResult,
       MyShare,
+      BillSettings,
     },
 
     props: {
@@ -140,12 +147,19 @@
         showModal: false,
         showPositionModal: false,
         showModalMain: false,
+        showSettings: false,
+        defaultTip: 10, // глобальные настройки
+        theme: 'light',
+        language: 'ru',
       }
     },
 
     methods: {
       navigateToPersons() {
         this.currentScreen = 'add-persons'
+      },
+      navigateToSettings() {
+        this.currentScreen = 'settings'
       },
 
       showInstructions() {
@@ -180,14 +194,35 @@
           this.people.splice(index, 1)
         }
       },
+      updateDefaultTip(newTip) {
+        this.defaultTip = newTip
+        console.log('Новый процент чаевых:', newTip)
+      },
+      updateTheme(newTheme) {
+        this.theme = newTheme
+        // Применение темы, если не сделано в BillSettings
+        document.body.className =
+          newTheme === 'dark' ? 'dark-theme' : 'light-theme'
+      },
+      updateLanguage(newLang) {
+        this.language = newLang
+        // Если используется система i18n — обновляем локализацию
+      },
+      resetAllData() {
+        // Здесь можно сбросить все данные приложения – people, positions, настройки и пр.
+        this.people = []
+        this.positions = []
+        this.defaultTip = 10
+        this.theme = 'light'
+        this.language = 'ru'
+        // Возвращаемся на главный экран
+        this.currentScreen = 'main-component'
+      },
       navigateToHome() {
         this.currentScreen = 'main-component'
       },
       removePosition(position) {
-        const index = this.positions.findIndex((p) => p.id === position.id)
-        if (index !== -1) {
-          this.positions.splice(index, 1)
-        }
+        this.positions.splice(position, 1)
       },
       addPeople(newPeople) {
         this.people = newPeople
@@ -209,6 +244,11 @@
           }
         }
         return totalCost
+      },
+      resetAll() {
+        this.people = []
+        this.positions = []
+        this.currentScreen = 'main-component'
       },
     },
   }

@@ -34,6 +34,10 @@
         type: String,
         default: 'inherit',
       },
+      backgroundColorHover: {
+        type: String,
+        default: '#026bb5',
+      },
       ariaLabel: {
         type: String,
         default: '',
@@ -59,6 +63,6 @@
   }
 
   .icon-button:hover {
-    background-color: #026bb5;
+    background-color: v-bind(backgroundColorHover);
   }
 </style>

@@ -197,26 +197,22 @@
       },
       updateDefaultTip(newTip) {
         this.defaultTip = newTip
-        console.log('Новый процент чаевых:', newTip)
       },
       updateTheme(newTheme) {
         this.theme = newTheme
-        // Применение темы, если не сделано в BillSettings
         document.body.className =
           newTheme === 'dark' ? 'dark-theme' : 'light-theme'
       },
       updateLanguage(newLang) {
         this.language = newLang
-        // Если используется система i18n — обновляем локализацию
       },
       resetAllData() {
-        // Здесь можно сбросить все данные приложения – people, positions, настройки и пр.
+
         this.people = []
         this.positions = []
         this.defaultTip = 10
         this.theme = 'light'
         this.language = 'ru'
-        // Возвращаемся на главный экран
         this.currentScreen = 'main-component'
       },
       navigateToHome() {
@@ -260,7 +256,7 @@
   @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
 
   .cont {
-    margin: auto;
+
     position: absolute;
     top: 50%;
     left: 50%;

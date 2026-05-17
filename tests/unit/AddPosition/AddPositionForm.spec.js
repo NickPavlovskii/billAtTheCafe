@@ -3,11 +3,6 @@ import { mount } from '@vue/test-utils'
 import AddPositionForm from '@/components/AddPosition/AddPositionForm.vue'
 import PrimeVue from 'primevue/config'
 
-const ReusableBtnStub = {
-    template: '<button @click="$emit(\'click\')"><slot /></button>',
-    name: 'ReusableBtn',
-}
-
 describe('AddPositionForm.vue', () => {
     let wrapper
 
@@ -24,9 +19,6 @@ describe('AddPositionForm.vue', () => {
             },
             global: {
                 plugins: [PrimeVue],
-                stubs: {
-                    'reusable-btn': ReusableBtnStub,
-                },
             },
         })
     }

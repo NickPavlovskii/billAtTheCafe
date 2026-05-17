@@ -1,61 +1,53 @@
-import { mount } from '@vue/test-utils'
-import MainScreen from '@/components/MainScreen.vue'
-import Dialog from 'primevue/dialog'
-import Button from 'primevue/button'
-import BaseBtn from '@/components/global/BaseButton.vue'
-import IconBtn from '@/components/global/IconButton.vue'
+import { describe, it, expect, beforeEach } from 'vitest'
 import { nextTick } from 'vue'
-import PrimeVue from 'primevue/config'
+import MainScreen from '@/components/MainScreen.vue'
+import { mountWithGlobals } from '../helpers/mountWithGlobals'
 
 describe('MainScreen.vue', () => {
-    let wrapper
+  let wrapper
 
-    beforeEach(() => {
-        wrapper = mount(MainScreen, {
-            global: {
-                plugins: [PrimeVue],
-                components: { Dialog, Button, BaseBtn, IconBtn },
-            },
-        })
+  beforeEach(() => {
+    wrapper = mountWithGlobals(MainScreen, {
+      props: {
+        hasDraft: false,
+        recentSessions: [],
+      },
     })
+  })
 
-    it('рендерит заголовок', () => {
-        expect(wrapper.text()).toContain('Добро пожаловать в Cafe Bill Splitter')
-    })
+  it('рендерит заголовок приложения', () => {
+    expect(wrapper.text()).toContain('Cafe')
+    expect(wrapper.text()).toContain('Bill Splitter')
+  })
 
-    it('показывает модальное окно при клике на кнопку с иконкой', async () => {
-        const iconBtn = wrapper.findComponent(IconBtn)
+  it('показывает модалку инструкции', async () => {
+    await wrapper.find('.btn-hint').trigger('click')
+    expect(wrapper.vm.showModal).toBe(true)
+    expect(wrapper.text()).toContain('Как это работает')
+  })
 
-        await iconBtn.trigger('click')
-        expect(wrapper.vm.showModal).toBe(true)
+  it('закрывает модалку по кнопке «Понятно, начнём!»', async () => {
+    wrapper.vm.showModal = true
+    await nextTick()
 
-    })
+    await wrapper.find('.btn-primary').trigger('click')
+    expect(wrapper.vm.showModal).toBe(false)
+  })
 
-    it('закрывает модальное окно при клике по затемнению', async () => {
-        // открыть модалку
-        wrapper.vm.showModal = true
-        await nextTick()
+  it('испускает start при клике «Начать»', async () => {
+    await wrapper.find('.btn-secondary').trigger('click')
+    expect(wrapper.emitted('start')).toBeTruthy()
+  })
 
-        const dialog = wrapper.findComponent(Dialog)
-        await dialog.trigger('click.self')
+  it('показывает кнопку продолжения при черновике', async () => {
+    await wrapper.setProps({ hasDraft: true })
+    expect(wrapper.text()).toContain('Продолжить текущий счёт')
+    expect(wrapper.text()).toContain('Начать заново')
+  })
 
-        expect(wrapper.vm.showModal).toBe(true)
-    })
-
-    it('закрывает модальное окно при клике на кнопку "Закрыть"', async () => {
-        wrapper.vm.showModal = true
-        await nextTick()
-
-        const closeButton = wrapper.findComponent(Button)
-        await closeButton.trigger('click')
-
-        expect(wrapper.vm.showModal).toBe(false)
-    })
-
-    it('испускает событие "start" при клике на кнопку "Начать"', async () => {
-        const baseBtn = wrapper.findComponent(BaseBtn)
-        await baseBtn.trigger('click')
-
-        expect(wrapper.emitted('start')).toBeTruthy()
-    })
+  it('испускает continue-draft', async () => {
+    await wrapper.setProps({ hasDraft: true })
+    await wrapper.find('.btn-primary').trigger('click')
+    expect(wrapper.emitted('continue-draft')).toBeTruthy()
+  })
 })

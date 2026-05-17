@@ -6,6 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -46,6 +48,7 @@
     "@vitejs/plugin-vue": "^5.2.4",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
+    "@vue/cli-plugin-pwa": "^5.0.9",
     "@vue/cli-service": "~5.0.0",
     "@vue/compiler-sfc": "^3.2.0",
     "@vue/test-utils": "^2.4.6",

@@ -1,0 +1,31 @@
+{
+  "name": "Cafe Bill Splitter",
+  "short_name": "Cafe Bill",
+  "description": "Разделение счёта в кафе с учётом чаевых",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#111520",
+  "theme_color": "#111520",
+  "lang": "ru",
+  "icons": [
+    {
+      "src": "/Cofe.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/Cofe.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/Cofe.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

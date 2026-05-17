@@ -1,0 +1,47 @@
+/* Desktop: keep the same narrow app width, only subtle spacing tweaks */
+@media (min-width: 768px) {
+  .app-shell {
+    padding: 32px 24px;
+    align-items: center;
+  }
+
+  .cont {
+    max-width: 420px;
+    min-height: 640px;
+    border-radius: var(--radius-xl);
+  }
+
+  .main-screen-desktop {
+    padding: 40px 32px 32px;
+  }
+
+  .main-screen-desktop .hero-title {
+    font-size: 52px;
+  }
+
+  .main-screen-desktop .hero-actions {
+    flex-direction: row;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .main-screen-desktop .btn-primary {
+    min-width: auto;
+    flex: 1.2;
+  }
+
+  .main-screen-desktop .btn-secondary {
+    min-width: auto;
+    flex: 1;
+  }
+}
+
+@media (min-width: 1024px) {
+  .app-shell {
+    padding: 40px 32px;
+  }
+
+  .cont {
+    max-width: 420px;
+  }
+}

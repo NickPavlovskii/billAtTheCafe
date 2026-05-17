@@ -1,118 +1,84 @@
-import { mount } from '@vue/test-utils'
-import Result from '@/components/BillResult.vue'
+import { describe, it, expect, beforeEach } from 'vitest'
+import BillResult from '@/components/BillResult.vue'
+import { mountWithGlobals } from '../helpers/mountWithGlobals'
 
 const people = [
-    { id: 1, name: 'Иван' },
-    { id: 2, name: 'Мария' },
+  { id: 1, name: 'Иван' },
+  { id: 2, name: 'Мария' },
 ]
 
 const positions = [
-    { price: 100, people: [people[0], people[1]] },
-    { price: 50, people: [people[0]] },
+  { price: 100, people: [{ id: 1, name: 'Иван' }, { id: 2, name: 'Мария' }] },
+  { price: 50, people: [{ id: 1, name: 'Иван' }] },
 ]
 
-describe('Result.vue', () => {
-    let wrapper
+describe('BillResult.vue', () => {
+  let wrapper
 
-    beforeEach(() => {
-        wrapper = mount(Result, {
-            props: {
-                people,
-                positions,
-                defaultTip: 10,
-            },
-        })
+  beforeEach(() => {
+    wrapper = mountWithGlobals(BillResult, {
+      props: {
+        people,
+        positions,
+        defaultTip: 10,
+        currency: '₽',
+      },
+    })
+  })
+
+  it('рендерит участников и их доли', () => {
+    const rows = wrapper.findAll('.table-row')
+    expect(rows).toHaveLength(2)
+    expect(rows[0].text()).toContain('Иван')
+    expect(rows[1].text()).toContain('Мария')
+    expect(wrapper.vm.personCosts[1]).toBeCloseTo(100)
+    expect(wrapper.vm.personCosts[2]).toBeCloseTo(50)
+  })
+
+  it('корректно считает totalCost и totalWithTips', () => {
+    expect(wrapper.vm.totalCost).toBeCloseTo(150)
+    expect(wrapper.vm.totalWithTips).toBeCloseTo(165)
+    expect(wrapper.vm.tipsAmount).toBeCloseTo(15)
+  })
+
+  it('корректно считает totalPaid из personPaid', async () => {
+    await wrapper.setData({
+      personPaid: { 1: '120', 2: '40' },
+    })
+    expect(wrapper.vm.totalPaid).toBeCloseTo(160)
+  })
+
+  it('показывает модалку если оплата меньше суммы с чаевыми', async () => {
+    await wrapper.setData({
+      personPaid: { 1: '50', 2: '50' },
+    })
+    expect(wrapper.vm.totalPaid).toBeLessThan(wrapper.vm.totalWithTips)
+
+    await wrapper.findComponent({ name: 'BaseButton' }).trigger('click')
+
+    expect(wrapper.vm.showModal).toBe(true)
+    expect(wrapper.text()).toContain('Не хватает денег')
+  })
+
+  it('переключает экран на debts при достаточной оплате', async () => {
+    await wrapper.setData({
+      personPaid: { 1: '110', 2: '55' },
     })
 
-    it('рендерит таблицу с людьми и их суммами', () => {
-        const rows = wrapper.findAll('tbody tr')
-        expect(rows).toHaveLength(2)
+    await wrapper.findComponent({ name: 'BaseButton' }).trigger('click')
 
-        expect(rows[0].text()).toContain('Иван')
-        expect(rows[1].text()).toContain('Мария')
+    expect(wrapper.vm.currentScreen).toBe('debts')
+    expect(wrapper.emitted('save-history')).toBeTruthy()
+  })
 
-        // Проверим расчет personCosts для Ивана
-        // Иван делит 100 на 2 + 50 = 50 + 50 = 100
-        expect(wrapper.vm.personCosts[1]).toBeCloseTo(100)
-
-        // Мария делит 100 на 2 = 50
-        expect(wrapper.vm.personCosts[2]).toBeCloseTo(50)
+  it('корректно вычисляет долги', async () => {
+    await wrapper.setData({
+      personPaid: { 1: '120', 2: '30' },
     })
 
-    it('корректно считает totalCost', () => {
-        expect(wrapper.vm.totalCost).toBeCloseTo(150)
-    })
-
-    it('корректно считает totalPaid из personPaid', async () => {
-        await wrapper.setData({
-            personPaid: {
-                1: '120',
-                2: '40',
-            },
-        })
-
-        expect(wrapper.vm.totalPaid).toBeCloseTo(160)
-    })
-
-    it('calculateTips рассчитывает чаевые', async () => {
-        await wrapper.setData({
-            personPaid: {
-                1: '100',
-                2: '50',
-            },
-        })
-        // totalPaid = 150, defaultTip = 10%
-        expect(wrapper.vm.calculateTips()).toBeCloseTo(15)
-    })
-
-    it('показывает модальное окно если totalCost > totalPaid при клике', async () => {
-        await wrapper.setData({
-            personPaid: {
-                1: '50',
-                2: '50',
-            },
-        })
-        expect(wrapper.vm.totalPaid).toBeLessThan(wrapper.vm.totalCost)
-
-        await wrapper.find('button').trigger('click')
-
-        expect(wrapper.vm.showModal).toBe(true)
-        expect(wrapper.find('.modal').exists()).toBe(true)
-    })
-
-    it('переключает экран на bill-list если totalCost <= totalPaid', async () => {
-        await wrapper.setData({
-            personPaid: {
-                1: '100',
-                2: '50',
-            },
-        })
-
-        expect(wrapper.vm.totalPaid).toBeGreaterThanOrEqual(wrapper.vm.totalCost)
-
-        await wrapper.find('button').trigger('click')
-
-        expect(wrapper.vm.currentScreen).toBe('bill-list')
-    })
-    it('корректно вычисляет долги', async () => {
-        await wrapper.setData({
-            personPaid: {
-                1: '120', // Иван заплатил больше на 20
-                2: '30',  // Мария заплатила меньше на 20
-            },
-        })
-
-        const debts = wrapper.vm.debts
-
-        console.log('debts.whoIsOwed:', debts.whoIsOwed)
-        console.log('debts.whoOwes:', debts.whoOwes)
-
-        expect(debts.whoIsOwed).toEqual([
-            { from: 'Иван', to: 'Мария', amount: '20.00' }
-        ])
-
-        expect(debts.whoOwes).toEqual([{ from: 'Иван', to: 'Мария', amount: '20.00' }])
-    })
-
-
+    const debts = wrapper.vm.debts
+    expect(debts.whoOwes).toEqual([
+      { from: 'Мария', to: 'Иван', amount: '10.00' },
+    ])
+  })
 })

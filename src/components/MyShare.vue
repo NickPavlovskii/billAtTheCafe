@@ -1,8 +1,13 @@
 <template>
-  <div class="menu" :class="{ active: menuActive }">
-    <div class="toggle" @click="toggleMenu" :class="{ active: menuActive,  }">
-      <i class="pi pi-share-alt app-iconn"></i>
-    </div>
+  <div :class="['menu', { active: menuActive }]">
+    <button
+      type="button"
+      :class="['toggle', 'nav-style', { active: menuActive }]"
+      aria-label="Поделиться"
+      @click="toggleMenu"
+    >
+      <Icon icon="mdi:share-variant" class="toggle-icon" />
+    </button>
     <li style="--i:0; --clr:#1877f2">
       <a href="https://github.com/NickPavlovskii">
         <i class=" pi pi-github icn" style="--clr: gray"></i>
@@ -44,6 +49,7 @@
 </template>
 
 <script>
+import { Icon } from '@iconify/vue'
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faGithub, faInstagram, faDiscord, faWhatsapp, faVk, faTelegram, faGitlab } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -51,6 +57,7 @@ library.add(faGithub, faInstagram, faDiscord, faWhatsapp, faVk, faTelegram, faGi
 
 export default {
   components: {
+    Icon,
     FontAwesomeIcon
   },
   data() {
@@ -67,81 +74,137 @@ export default {
 </script>
 
 <style>
-.icn{
+.icn {
   color: var(--clr);
-  transform: rotate(calc(360deg/7*var(--i)));
 }
 .menu {
   position: relative;
   display: flex;
- margin-top: 20px;
- margin-right: 20px;
-}
-
-.app-iconn {
-  font-size: 15px;
-  
-}
-
-.toggle {
-  position: relative;
-  bottom: 5px;
-  display: flex;
-  justify-content: center;
+  margin: 10px 0 0;
   align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  overflow: visible;
+  z-index: 30;
+  flex-shrink: 0;
+  align-self: flex-end;
+}
+
+.toggle.nav-style {
   width: 30px;
   height: 30px;
-  background: #f1f1f1;
+  min-width: 30px;
+  min-height: 30px;
+  padding: 0;
   border-radius: 50%;
+  background: #f1f1f1;
+  border: none;
+  color: #333;
   box-shadow: 0 3px 4px rgba(0, 0, 0, 0.15);
-  transition: 1.25s;
-  font-size: 2em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.12s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
-.toggle:hover .app-iconn{
-    color: #048bfa;
+.toggle.nav-style:hover {
+  background: #048bfa;
+  color: #fff;
+  box-shadow: 0 4px 6px rgba(4, 139, 250, 0.35);
 }
-.menu-items {
-  /* Add your styles for the menu items */
+.toggle.nav-style:active {
+  transform: scale(0.91);
+}
+.toggle.nav-style .toggle-icon {
+  width: 16px;
+  height: 16px;
+  color: inherit;
+}
+.toggle.nav-style.active {
+  background: #048bfa;
+  color: #fff;
+  transform: none;
+  box-shadow: 0 4px 6px rgba(4, 139, 250, 0.35);
+}
+.toggle.nav-style.active:hover {
+  background: #048bfa;
+  color: #fff;
 }
 
-.toggle.active {
-  transform: rotate(360deg);
-  box-shadow: 0 5px 5px #048bfa, 0 0 0 2px #048bfa, 0 0 0 8px #fff;
+.menu li {
+  --count: 7;
+  --radius: 54px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  margin-left: -16px;
+  margin-top: -16px;
+  transform-origin: center center;
+  transform: rotate(calc(360deg / var(--count) * var(--i))) translateY(calc(-1 * var(--radius)));
+  scale: 0;
+  transition: transform 0.35s ease-out, scale 0.25s ease-out;
+  transition-delay: calc(0.03s * var(--i));
 }
-
-.menu li{
-position: absolute;
-left:  -30px;
-list-style: none;
-transition: 0.5s;
-transform: rotate(calc(360deg/7*var(--i)));
-transform-origin: 45px;
-scale: 0;
-transition-delay: calc(0.05s * var(--i));
-}
-.menu.active li{
-
+.menu.active li {
   scale: 1;
-
 }
-.menu.active .toggle {
-  transform: rotate(45deg);
-}
-
-.menu li a{
+.menu li a {
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
- 
-  transform: rotate(calc(360deg/7*var(--i)));
-
-
-
-
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #f1f1f1;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  color: inherit;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.15s;
+  transform: rotate(calc(-360deg / var(--count) * var(--i)));
 }
- </style>
+.menu li a:hover {
+  background: #e0e0e0;
+  transform: rotate(calc(-360deg / var(--count) * var(--i))) scale(1.1);
+}
+.menu li a .icn,
+.menu li a i {
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+}
+
+.toggle.nav-style {
+  position: relative;
+  z-index: 2;
+}
+
+@media (max-width: 480px) {
+  .menu {
+    width: 40px;
+    height: 40px;
+    margin-top: 25px;
+  }
+  .toggle.nav-style {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
+  }
+  .menu li {
+    --radius: 50px;
+  }
+}
+
+</style>
 
   
 

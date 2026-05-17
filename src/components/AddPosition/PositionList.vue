@@ -1,107 +1,220 @@
 <template>
-    <div>
-      <h3 class="title">Список позиций:</h3>
-      <ul class="position-list">
-        <li
-          v-for="(position, index) in positions"
-          :key="index"
-          class="position-item"
-        >
-          <div class="position-info">
+  <div>
+    <h3 class="title">Список позиций:</h3>
+    <ul class="position-list">
+      <li
+        v-for="(position, index) in positions"
+        :key="index"
+        class="position-item"
+      >
+        <div class="position-info">
+          <div class="position-top">
             <span class="position-name">{{ position.name }}</span>
-            <span class="position-price">{{ position.price }} руб.</span>
-            <div class="avatars-container">
-              <Avatar
-                v-for="(person, personIndex) in position.people"
-                :key="personIndex"
-                :label="person.name[0]"
-                :style="{ backgroundColor: getAvatarColor(personIndex) }"
-                :class="['avatar', 'ava', { 'avatar-active': person.checked }]"
-                size="small"
-                shape="circle"
-              />
+            <span class="position-price">
+              {{ position.price }} {{ currency }}
+            </span>
+          </div>
+          <div class="avatars-container">
+            <div
+              v-for="(person, personIndex) in position.people"
+              :key="personIndex"
+              class="mini-avatar"
+              :style="{ background: getAvatarColor(person.name) }"
+              :title="person.name"
+            >
+              {{ person.name[0].toUpperCase() }}
             </div>
           </div>
-          <button
-            class="remove-button"
-            @click="$emit('remove-position', index)"
+        </div>
+        <button
+          class="remove-button"
+          @click="$emit('remove-position', index)"
+          aria-label="Удалить позицию"
+        >
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
           >
-            <i class="pi pi-trash"></i>
-          </button>
-        </li>
-      </ul>
-    </div>
-  </template>
-  
-  <script>
-  import Avatar from 'primevue/avatar'
-  
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
+        </button>
+      </li>
+    </ul>
+  </div>
+</template>
+
+<script>
+  const AVATAR_GRADS = [
+    'linear-gradient(135deg, #048bfa, #0260c4)',
+    'linear-gradient(135deg, #f05252, #c0392b)',
+    'linear-gradient(135deg, #22c55e, #168d3f)',
+    'linear-gradient(135deg, #f59e0b, #c97d08)',
+    'linear-gradient(135deg, #8b5cf6, #6530c2)',
+    'linear-gradient(135deg, #0dbfac, #07907f)',
+    'linear-gradient(135deg, #ec4899, #b52277)',
+  ]
+
   export default {
     name: 'PositionList',
-    components: {
-      Avatar,
-    },
     props: {
-      positions: Array,
+      positions: { type: Array, required: true },
+      currency: { type: String, default: '₽' },
     },
+    emits: ['remove-position'],
     methods: {
-      getAvatarColor(index) {
-        const colors = ['#048bfa', '#ff6b6b', '#67d17e', '#f4b942', '#7c49b3']
-        return colors[index % colors.length]
+      getAvatarColor(name) {
+        return AVATAR_GRADS[name.charCodeAt(0) % AVATAR_GRADS.length]
       },
     },
   }
-  </script>
-  
-  <style scoped>
+</script>
+
+<style scoped>
   .title {
-    font-size: 24px;
-    margin-bottom: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--label-color);
+    text-transform: uppercase;
+    margin: 0 0 10px;
+    transition: color 0.3s;
   }
+
   .position-list {
     list-style: none;
-    padding-left: 0;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
+
   .position-item {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    gap: 10px;
+    padding: 11px 14px;
+    background: var(--surface);
+    border-radius: 12px;
+    border: 1.5px solid var(--surface-border);
+    border-left: 3px solid var(--accent);
+    transition:
+      background 0.3s,
+      border-color 0.3s,
+      box-shadow 0.15s;
   }
+  .position-item:hover {
+    box-shadow: 0 2px 8px var(--accent-soft);
+  }
+
+  .position-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .position-top {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
   .position-name {
-    font-weight: bold;
-    margin-right: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+    transition: color 0.3s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
+
   .position-price {
-    color: #888;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    white-space: nowrap;
+    transition: color 0.3s;
   }
+
   .avatars-container {
     display: flex;
-    margin-top: 10px;
+    flex-wrap: wrap;
+    gap: 4px;
   }
-  .avatar {
+
+  .mini-avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 8px;
-    background-color: #f2f2f2;
+    font-size: 10px;
+    font-weight: 900;
+    color: #fff;
+    flex-shrink: 0;
   }
-  .avatar-active {
-    background-color: #048bfa;
-    border: 2px solid white;
-    color: white;
-  }
+
   .remove-button {
-    background-color: transparent;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: transparent;
     border: none;
+    color: var(--label-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
+    flex-shrink: 0;
+    transition:
+      background 0.15s,
+      color 0.15s,
+      transform 0.12s;
+    -webkit-tap-highlight-color: transparent;
   }
-  .remove-button i {
-    font-size: 1.3rem;
-    color: black;
+  .remove-button:hover {
+    background: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
   }
-  </style>
-  
+  .remove-button:active {
+    transform: scale(0.88);
+  }
+
+  @media (max-width: 480px) {
+    .title {
+      margin-bottom: 8px;
+    }
+    .position-list {
+      gap: 6px;
+    }
+    .position-item {
+      padding: 10px 12px;
+      border-radius: 10px;
+    }
+    .position-name {
+      font-size: 12px;
+    }
+    .position-price {
+      font-size: 11px;
+    }
+    .mini-avatar {
+      width: 20px;
+      height: 20px;
+      font-size: 9px;
+    }
+    .remove-button {
+      min-width: 36px;
+      min-height: 36px;
+    }
+  }
+</style>

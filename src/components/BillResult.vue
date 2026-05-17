@@ -85,36 +85,32 @@
           />
         </div>
 
-        <transition name="modal-slide">
-          <div
-            v-if="showModal"
-            class="modal-overlay"
-            @click.self="showModal = false"
-          >
-            <div class="modal-sheet">
-              <div class="sheet-handle"></div>
-              <div class="modal-emoji">
-                <Icon
-                  icon="mdi:cash"
-                  class="modal-emoji-icon"
-                />
-              </div>
-              <h3>Не хватает денег</h3>
-              <p>
-                Ещё нужно:
-                <strong>
-                  {{ (totalWithTips - totalPaid).toFixed(2) }} {{ currency }}
-                </strong>
-                <br />
-                Введите суммы, которые покрывают все расходы (с учётом чаевых).
-              </p>
-              <base-btn
-                text="Понятно"
-                @click="showModal = false"
-              />
-            </div>
+        <bottom-sheet
+          :show="showModal"
+          @update:show="showModal = $event"
+        >
+          <div class="modal-emoji">
+            <Icon
+              icon="mdi:cash"
+              class="modal-emoji-icon"
+            />
           </div>
-        </transition>
+          <h3 class="modal-title">Не хватает денег</h3>
+          <p class="modal-text bill-result-modal-text">
+            Ещё нужно:
+            <strong>
+              {{ (totalWithTips - totalPaid).toFixed(2) }} {{ currency }}
+            </strong>
+            <br />
+            Введите суммы, которые покрывают все расходы (с учётом чаевых).
+          </p>
+          <template #footer>
+            <base-btn
+              text="Понятно"
+              @click="showModal = false"
+            />
+          </template>
+        </bottom-sheet>
       </div>
 
       <div
@@ -1031,42 +1027,7 @@
     transform: translateY(-6px);
   }
 
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(4, 8, 20, 0.6);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    z-index: 500;
-  }
-
-  .modal-sheet {
-    background: var(--modal-sheet-bg);
-    border-radius: 28px 28px 0 0;
-    padding: 12px 28px 36px;
-    padding-bottom: calc(36px + env(safe-area-inset-bottom, 0px));
-    width: 100%;
-    max-width: 480px;
-    text-align: center;
-    border-top: 2px solid var(--modal-sheet-border);
-    box-shadow: 0 -6px 40px rgba(0, 0, 0, 0.3);
-    transition:
-      background 0.3s,
-      border-color 0.3s;
-  }
-
-  .sheet-handle {
-    width: 40px;
-    height: 4px;
-    background: #444;
-    border-radius: 4px;
-    margin: 0 auto 20px;
-  }
   .modal-emoji {
-    font-size: 40px;
     margin-bottom: 12px;
     display: flex;
     align-items: center;
@@ -1077,21 +1038,9 @@
     height: 40px;
     color: var(--accent);
   }
-
-  .modal-sheet h3 {
-    font-size: 18px;
+  .bill-result-modal-text strong {
+    color: var(--modal-text);
     font-weight: 800;
-    color: #e4eeff;
-    margin: 0 0 10px;
-  }
-  .modal-sheet p {
-    font-size: 14px;
-    color: rgba(180, 200, 230, 0.6);
-    margin: 0 0 24px;
-    line-height: 1.6;
-  }
-  .modal-sheet strong {
-    color: #e4eeff;
   }
 
   .slide-fade-enter-active {
@@ -1107,21 +1056,6 @@
   .slide-fade-leave-to {
     opacity: 0;
     transform: translateX(-16px);
-  }
-
-  .modal-slide-enter-active {
-    transition: all 0.32s cubic-bezier(0.32, 1, 0.56, 1);
-  }
-  .modal-slide-leave-active {
-    transition: all 0.2s ease;
-  }
-  .modal-slide-enter-from {
-    opacity: 0;
-    transform: translateY(100%);
-  }
-  .modal-slide-leave-to {
-    opacity: 0;
-    transform: translateY(80%);
   }
 
   @media (max-width: 480px) {

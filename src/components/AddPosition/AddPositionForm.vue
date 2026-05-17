@@ -271,38 +271,28 @@
       <i class="i"></i>
     </button>
 
-    <transition name="modal-slide">
-      <div
-        v-if="showModal"
-        class="modal-overlay"
-        @click.self="showModal = false"
-      >
-        <div class="modal-sheet">
-          <div class="sheet-handle"></div>
-          <div class="modal-emoji">
-            <Icon
-              class="modal-emoji-icon"
-              :icon="modalHint.icon"
-            />
-          </div>
-          <h3>{{ modalHint.title }}</h3>
-          <p>{{ modalHint.text }}</p>
-          <button
-            class="btn-modal-ok"
-            @click="showModal = false"
-          >
-            <span>Понятно</span>
-            <i class="i"></i>
-          </button>
-        </div>
-      </div>
-    </transition>
+    <bottom-sheet
+      :show="showModal"
+      :icon="modalHint.icon"
+      :title="modalHint.title"
+      :text="modalHint.text"
+      @update:show="showModal = $event"
+    >
+      <template #footer>
+        <button
+          type="button"
+          class="btn-modal-ok"
+          @click="showModal = false"
+        >
+          <span>Понятно</span>
+          <i class="i"></i>
+        </button>
+      </template>
+    </bottom-sheet>
   </div>
 </template>
 
 <script>
-import { Icon } from '@iconify/vue'
-
   const GRADS = [
     'linear-gradient(135deg,#048bfa,#0260c4)',
     'linear-gradient(135deg,#f05252,#c0392b)',
@@ -315,7 +305,6 @@ import { Icon } from '@iconify/vue'
 
   export default {
     name: 'AddPositionForm',
-    components: { Icon },
     props: {
       people: { type: Array, required: true },
     },
@@ -794,69 +783,6 @@ import { Icon } from '@iconify/vue'
     transform: scale(0.97);
   }
 
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(4, 8, 20, 0.6);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    z-index: 500;
-  }
-
-  .modal-sheet {
-    background: var(--modal-sheet-bg);
-    border-radius: 28px 28px 0 0;
-    padding: 12px 28px 36px;
-    padding-bottom: calc(36px + env(safe-area-inset-bottom, 0px));
-    width: 100%;
-    max-width: 480px;
-    text-align: center;
-    border-top: 2px solid var(--modal-sheet-border);
-    box-shadow: 0 -6px 40px rgba(0, 0, 0, 0.3);
-    transition:
-      background 0.3s,
-      border-color 0.3s;
-  }
-
-  .sheet-handle {
-    width: 40px;
-    height: 4px;
-    background: #444;
-    border-radius: 4px;
-    margin: 0 auto 20px;
-  }
-
-  .modal-emoji {
-    margin-bottom: 12px;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .modal-emoji-icon {
-    width: 44px;
-    height: 44px;
-    color: var(--accent);
-  }
-
-  .modal-sheet h3 {
-    font-size: 18px;
-    font-weight: 800;
-    color: #e4eeff;
-    margin: 0 0 8px;
-  }
-
-  .modal-sheet p {
-    font-size: 13px;
-    color: rgba(180, 200, 230, 0.55);
-    margin: 0 0 22px;
-    line-height: 1.6;
-  }
-
   .btn-modal-ok {
     position: relative;
     padding: 10px 32px;
@@ -940,18 +866,4 @@ import { Icon } from '@iconify/vue'
     box-shadow: 60px 0 #fff;
   }
 
-  .modal-slide-enter-active {
-    transition: all 0.32s cubic-bezier(0.32, 1, 0.56, 1);
-  }
-  .modal-slide-leave-active {
-    transition: all 0.2s ease;
-  }
-  .modal-slide-enter-from {
-    opacity: 0;
-    transform: translateY(100%);
-  }
-  .modal-slide-leave-to {
-    opacity: 0;
-    transform: translateY(80%);
-  }
 </style>

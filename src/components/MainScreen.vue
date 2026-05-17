@@ -131,44 +131,40 @@
       </div>
     </section>
 
-    <transition name="modal-slide">
-      <div
-        v-if="showModal"
-        class="modal-overlay"
-        @click.self="showModal = false"
-      >
-        <div class="modal-sheet">
-          <div class="sheet-handle" />
-          <div class="sheet-title">
-            <Icon
-              icon="mdi:lightbulb-outline"
-              class="sheet-icon"
-            />
-            <h3>Как это работает</h3>
-          </div>
-          <ul class="steps">
-            <li
-              v-for="(step, i) in instructionSteps"
-              :key="i"
-              class="step"
-            >
-              <div class="step-num">{{ i + 1 }}</div>
-              <div class="step-body">
-                <strong>{{ step.title }}</strong>
-                <p>{{ step.desc }}</p>
-              </div>
-            </li>
-          </ul>
-          <button
-            type="button"
-            class="btn-primary"
-            @click="showModal = false"
-          >
-            Понятно, начнём!
-          </button>
-        </div>
+    <bottom-sheet
+      :show="showModal"
+      @update:show="showModal = $event"
+    >
+      <div class="sheet-title">
+        <Icon
+          icon="mdi:lightbulb-outline"
+          class="sheet-icon"
+        />
+        <h3>Как это работает</h3>
       </div>
-    </transition>
+      <ul class="steps">
+        <li
+          v-for="(step, i) in instructionSteps"
+          :key="i"
+          class="step"
+        >
+          <div class="step-num">{{ i + 1 }}</div>
+          <div class="step-body">
+            <strong>{{ step.title }}</strong>
+            <p>{{ step.desc }}</p>
+          </div>
+        </li>
+      </ul>
+      <template #footer>
+        <button
+          type="button"
+          class="btn-primary"
+          @click="showModal = false"
+        >
+          Понятно, начнём!
+        </button>
+      </template>
+    </bottom-sheet>
 
     <div
       class="coffee-bg"
@@ -557,44 +553,9 @@
     color: var(--brown);
   }
 
-  /* Modal */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(43, 27, 23, 0.55);
-    backdrop-filter: blur(6px);
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    z-index: 200;
-  }
-  @media (min-width: 768px) {
-    .modal-overlay {
-      align-items: center;
-      padding: 24px;
-    }
-  }
-
-  .modal-sheet {
-    background: var(--card-bg);
-    border-radius: 28px 28px 0 0;
-    padding: 12px 24px 32px;
-    width: 100%;
-    max-width: 420px;
-    border-top: 3px solid var(--orange);
-  }
-  @media (min-width: 768px) {
-    .modal-sheet {
-      border-radius: var(--radius-lg);
-      border: 2px solid var(--orange);
-    }
-  }
-  .sheet-handle {
-    width: 40px;
-    height: 4px;
-    background: var(--surface-border);
-    border-radius: 4px;
-    margin: 0 auto 16px;
+  .sheet-title,
+  .steps {
+    text-align: left;
   }
   .sheet-title {
     display: flex;
@@ -652,21 +613,6 @@
     color: var(--text-secondary);
     margin: 0;
     line-height: 1.5;
-  }
-
-  .modal-slide-enter-active {
-    transition: all 0.32s cubic-bezier(0.32, 1, 0.56, 1);
-  }
-  .modal-slide-leave-active {
-    transition: all 0.2s ease;
-  }
-  .modal-slide-enter-from {
-    opacity: 0;
-    transform: translateY(100%);
-  }
-  .modal-slide-leave-to {
-    opacity: 0;
-    transform: translateY(60%);
   }
 
   @media (max-width: 480px) {

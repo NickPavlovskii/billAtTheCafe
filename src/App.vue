@@ -194,53 +194,35 @@
       <div class="niklad-tag">@Niklad</div>
     </div>
 
-    <transition name="modal-slide">
-      <div
-        v-if="showModal"
-        class="modal-overlay"
-        @click.self="showModal = false"
-      >
-        <div class="modal-sheet">
-          <div class="sheet-handle" />
-          <div class="modal-emoji">
-            <Icon
-              :icon="peopleModalIcon"
-              class="modal-emoji-icon"
-            />
-          </div>
-          <h3>{{ peopleModalTitle }}</h3>
-          <p>{{ peopleModalText }}</p>
-          <base-btn
-            text="Понятно"
-            @click="showModal = false"
-          />
-        </div>
-      </div>
-    </transition>
+    <bottom-sheet
+      :show="showModal"
+      :icon="peopleModalIcon"
+      :title="peopleModalTitle"
+      :text="peopleModalText"
+      @update:show="showModal = $event"
+    >
+      <template #footer>
+        <base-btn
+          text="Понятно"
+          @click="showModal = false"
+        />
+      </template>
+    </bottom-sheet>
 
-    <transition name="modal-slide">
-      <div
-        v-if="showPositionModal"
-        class="modal-overlay"
-        @click.self="showPositionModal = false"
-      >
-        <div class="modal-sheet">
-          <div class="sheet-handle" />
-          <div class="modal-emoji">
-            <Icon
-              icon="mdi:silverware-fork-knife"
-              class="modal-emoji-icon"
-            />
-          </div>
-          <h3>Мало позиций</h3>
-          <p>Добавьте минимум 2 позиции, чтобы рассчитать счёт</p>
-          <base-btn
-            text="Ок, добавлю"
-            @click="showPositionModal = false"
-          />
-        </div>
-      </div>
-    </transition>
+    <bottom-sheet
+      :show="showPositionModal"
+      icon="mdi:silverware-fork-knife"
+      title="Мало позиций"
+      text="Добавьте минимум 2 позиции, чтобы рассчитать счёт"
+      @update:show="showPositionModal = $event"
+    >
+      <template #footer>
+        <base-btn
+          text="Ок, добавлю"
+          @click="showPositionModal = false"
+        />
+      </template>
+    </bottom-sheet>
 
     <Teleport to="body">
       <transition name="modal-slide">
@@ -860,74 +842,6 @@ export default {
   pointer-events: none;
 }
 
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(43, 27, 23, 0.55);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  z-index: 1000;
-}
-@media (min-width: 768px) {
-  .modal-overlay {
-    align-items: center;
-    padding: 24px;
-  }
-}
-
-.modal-sheet {
-  background: var(--modal-sheet-bg);
-  border-radius: 28px 28px 0 0;
-  padding: 12px 28px 36px;
-  padding-bottom: calc(36px + env(safe-area-inset-bottom, 0px));
-  width: 100%;
-  max-width: 420px;
-  text-align: center;
-  border-top: 3px solid var(--modal-sheet-border);
-  box-shadow: 0 -8px 40px rgba(43, 27, 23, 0.2);
-  transition: background 0.3s;
-}
-@media (min-width: 768px) {
-  .modal-sheet {
-    border-radius: var(--radius-lg);
-    border-top: none;
-    border: 2px solid var(--modal-sheet-border);
-  }
-}
-.sheet-handle {
-  width: 40px;
-  height: 4px;
-  background: var(--surface-border);
-  border-radius: 4px;
-  margin: 0 auto 20px;
-}
-.modal-emoji {
-  margin-bottom: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.modal-emoji-icon {
-  width: 48px;
-  height: 48px;
-  color: var(--accent);
-}
-.modal-sheet h3 {
-  font-size: 20px;
-  font-weight: 800;
-  color: var(--modal-text);
-  margin: 0 0 10px;
-}
-.modal-sheet p {
-  font-size: 14px;
-  color: var(--modal-subtext);
-  margin: 0 0 24px;
-  line-height: 1.6;
-}
-
 .slide-fade-enter-active {
   transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -949,28 +863,6 @@ export default {
 .step-bar-enter-from {
   opacity: 0;
   transform: translateY(-6px);
-}
-
-.modal-slide-enter-active {
-  transition: all 0.32s cubic-bezier(0.32, 1, 0.56, 1);
-}
-.modal-slide-leave-active {
-  transition: all 0.2s ease;
-}
-.modal-slide-enter-from {
-  opacity: 0;
-  transform: translateY(100%);
-}
-.modal-slide-leave-to {
-  opacity: 0;
-  transform: translateY(60%);
-}
-@media (min-width: 768px) {
-  .modal-slide-enter-from,
-  .modal-slide-leave-to {
-    transform: scale(0.95);
-    opacity: 0;
-  }
 }
 
 @media (max-width: 480px) {
